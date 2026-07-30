@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="宠物奶牛">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+<title>宠物奶牛·学习乐园</title>
+<style>
+:root{
+--pink:#FF8FAB;--pink-l:#FFC5D9;--pink-d:#E57393;--pink-dd:#C24D6E;
+--lav:#C8A9FC;--lav-l:#E8DFFB;--lav-d:#9B6FE0;
+--blue:#E8F4FD;--blue-d:#2C5F8E;--blue-c:#3A7BB5;
+--sun:#FFD93D;--sun-d:#FFC93C;
+--green:#6BCB77;--green-d:#4FA85E;
+--red:#FF6B6B;--red-d:#E84A5F;
+--orange:#FF9F40;
+--t1:#5A3D6A;--t2:#7B5D8A;--t3:#A99BC0;
+--w:#FFF;--bg:#FFF0F5;--bg2:#FFE4EC;
+--sh:0 4px 16px rgba(255,143,171,.15);
+--r:18px;--rs:12px;--nav-w:220px;--nav-w2:180px;--hh:56px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--t1);line-height:1.6;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;transition:all .15s}
+button:active{transform:scale(.97)}
+ul{list-style:none}
+a{color:inherit;text-decoration:none}
+.app{display:flex;min-height:100vh;min-height:-webkit-fill-available}
+/* 左侧导航 */
+.nav{width:var(--nav-w);background:linear-gradient(180deg,var(--pink),var(--pink-d));position:fixed;top:0;left:0;bottom:0;z-index:100;box-shadow:2px 0 16px rgba(255,143,171,.2);overflow-y:auto;display:flex;flex-direction:column}
+.nav-head{padding:18px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.2)}
+.logo{width:42px;height:42px;background:rgba(255,255,255,.22);border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:14px;flex-shrink:0}
+.brand{display:flex;flex-direction:column}
+.brand-t{color:#fff;font-size:14px;font-weight:700}
+.brand-s{color:var(--pink-l);font-size:11px}
+.nav-menu{flex:1;padding:10px 8px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rs);color:#fff;font-size:14px;margin-bottom:3px;cursor:pointer;transition:all .2s}
+.nav-item:hover{background:rgba(255,255,255,.1)}
+.nav-item.on{background:var(--lav-l);color:var(--pink-dd);font-weight:600}
+.nav-ico{width:30px;height:30px;background:rgba(255,255,255,.16);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px}
+.nav-item.on .nav-ico{background:rgba(255,255,255,.4)}
+.nav-foot{padding:12px;border-top:1px solid rgba(255,255,255,.2)}
+.pet-mini{background:rgba(255,255,255,.16);border-radius:var(--rs);padding:10px 12px;display:flex;align-items:center;gap:8px}
+.pet-emoji{font-size:28px}
+.pet-info{flex:1}
+.pet-name{color:#fff;font-size:13px;font-weight:600}
+.pet-bar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;margin-top:4px}
+.pet-bar-fill{height:100%;background:var(--sun);border-radius:3px;transition:width .3s}
+/* 主内容 */
+.main{flex:1;margin-left:var(--nav-w);min-height:100vh;display:flex;flex-direction:column}
+.content{flex:1;padding:20px;max-width:1100px;width:100%}
+/* 手机顶栏 */
+.mob-head{display:none;position:fixed;top:0;left:0;right:0;height:var(--hh);background:linear-gradient(90deg,var(--pink),var(--pink-d));align-items:center;justify-content:space-between;padding:0 12px;z-index:90;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.ham{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+.mob-brand{display:flex;align-items:center;gap:6px}
+.mob-brand .logo{width:34px;height:34px;font-size:12px}
+.mob-brand .brand-t{font-size:13px;color:#fff}
+.mob-pts{color:var(--sun);font-weight:700;font-size:14px;display:flex;align-items:center;gap:2px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99}
+.overlay.show{display:block}
+/* 页面 */
+.page{display:none}.page.on{display:block;animation:fi .25s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.pg-hd{margin-bottom:16px}
+.pg-t{font-size:clamp(18px,3vw,24px);font-weight:800;display:flex;align-items:center;gap:6px}
+.pg-s{color:var(--t2);font-size:13px;margin-top:3px}
+.card{background:#fff;border-radius:var(--r);padding:18px;box-shadow:var(--sh);margin-bottom:14px}
+.card-t{font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px}
+.sc{border-radius:var(--r);padding:16px 14px;color:#fff;position:relative}
+.sc .sv{font-size:26px;font-weight:800;line-height:1.2}
+.sc .sl{font-size:12px;opacity:.9;margin-top:2px}
+.sc-pk{background:linear-gradient(135deg,var(--pink-l),var(--pink))}
+.sc-lv{background:linear-gradient(135deg,var(--lav-l),var(--lav))}
+.sc-bl{background:linear-gradient(135deg,var(--blue-c),var(--blue-d))}
+.sc-gn{background:linear-gradient(135deg,#7DD886,var(--green-d))}
+.sc-sun{background:linear-gradient(135deg,#FFE564,var(--sun-d));color:#7a5a00}
+.sc-or{background:linear-gradient(135deg,#FFB347,var(--orange))}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+/* 进度条 */
+.pbar{background:var(--pink-l);border-radius:16px;height:8px;overflow:hidden;margin:6px 0}
+.pfill{height:100%;background:linear-gradient(90deg,var(--green),#8AE093);border-radius:16px;transition:width .4s}
+/* 欢迎横幅 */
+.wban{background:linear-gradient(135deg,var(--pink),var(--pink-d));border-radius:var(--r);padding:20px;color:#fff;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:14px}
+.wban h2{font-size:clamp(16px,2.5vw,22px);font-weight:800;margin-bottom:4px}
+.wban p{color:var(--pink-l);font-size:13px}
+.wpts{background:rgba(255,255,255,.18);border-radius:14px;padding:14px 18px;text-align:center;min-width:120px}
+.wpts .n{font-size:28px;font-weight:800;color:var(--sun);display:flex;align-items:center;gap:4px;justify-content:center}
+.wpts .l{font-size:11px;color:var(--pink-l);margin-top:2px}
+/* 任务卡 */
+.tk{background:#fff;border-radius:var(--r);padding:14px;box-shadow:var(--sh);margin-bottom:10px;display:flex;align-items:center;gap:12px;border-left:4px solid var(--pink)}
+.tk.done{border-left-color:var(--green);background:linear-gradient(90deg,#F0FBF1,#fff 60%)}
+.tk-i{flex:1;min-width:0}
+.tk-n{font-weight:600;font-size:14px;color:var(--t1)}
+.tk-m{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.tk-tag{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--blue);color:var(--blue-d)}
+.tk-pts{font-size:12px;color:#C88A00;font-weight:600;display:flex;align-items:center;gap:2px}
+.btk{padding:7px 16px;border-radius:18px;font-size:13px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.btk-pk{background:var(--pink);color:#fff}.btk-pk:hover{background:var(--pink-d)}
+.btk-gn{background:var(--green);color:#fff}
+.btk-gy{background:#D5CBE8;color:#999;cursor:not-allowed}
+.btk-lv{background:var(--lav);color:#fff}.btk-lv:hover{background:var(--lav-d)}
+.btk-or{background:var(--orange);color:#fff}
+/* 课本标签 */
+.tb{font-size:11px;padding:2px 8px;border-radius:8px;display:inline-block;margin-bottom:4px}
+.tb-s3{background:#FFE0B2;color:#E65100}
+.tb-math{background:#E8F4FD;color:#2C5F8E}
+.tb-eng{background:#C8E6C9;color:#2E7D32}
+/* 古诗 */
+.poem-c{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);border-top:4px solid var(--lav);cursor:pointer;transition:all .2s}
+.poem-c:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(255,143,171,.2)}
+.poem-t{font-size:16px;font-weight:700;color:var(--t1)}
+.poem-a{font-size:12px;color:var(--t2);margin:2px 0 8px}
+.poem-pr{font-size:13px;color:var(--t2);line-height:1.8}
+.poem-st{margin-top:10px;font-size:12px;display:inline-block;padding:2px 10px;border-radius:10px}
+.poem-st.m{background:#E8F8EA;color:var(--green-d)}
+.poem-st.t{background:var(--blue);color:var(--blue-d)}
+.pinyin{color:var(--pink-d);font-size:14px;display:inline;margin-left:4px;opacity:0;transition:opacity .2s}
+.pinyin.show{opacity:1}
+.def{color:var(--lav-d);font-size:12px;background:var(--lav-l);padding:2px 8px;border-radius:6px;display:inline-block;margin:2px}
+/* 数学预习 */
+.math-lesson{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:10px}
+.math-lesson.on{border:2px solid var(--green);background:linear-gradient(90deg,#F0FBF1,#fff 60%)}
+.ml-hd{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.ml-t{font-weight:700;font-size:15px}
+.ml-sub{font-size:13px;color:var(--t2);margin-bottom:10px}
+.ml-quiz{background:var(--bg);border-radius:var(--rs);padding:12px;margin:8px 0}
+.ml-q{font-size:14px;margin-bottom:6px;font-weight:600}
+.ml-opts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.ml-opt{padding:6px 14px;border-radius:14px;background:#fff;font-size:13px;border:2px solid transparent;cursor:pointer}
+.ml-opt.ok{background:var(--green);color:#fff;border-color:var(--green)}
+.ml-opt.no{background:var(--red);color:#fff;border-color:var(--red)}
+.ml-opt:active{transform:scale(.95)}
+.ml-result{font-size:13px;margin-top:6px;padding:6px;border-radius:var(--rs)}
+.ml-result.ok{background:#E8F8EA;color:var(--green-d)}
+.ml-result.no{background:#FFE4EC;color:var(--pink-d)}
+/* 英语单词 */
+.eng-unit{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:10px}
+.word-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--bg2)}
+.word-item:last-child{border-bottom:none}
+.word-w{font-weight:600;font-size:14px}
+.word-p{font-size:12px;color:var(--t2)}
+.word-m{font-size:12px;color:var(--pink-d)}
+.word-st{font-size:11px;padding:1px 6px;border-radius:6px;flex-shrink:0}
+.word-st.done{background:#E8F8EA;color:var(--green-d)}
+.word-st.todo{background:var(--bg2);color:var(--t2)}
+/* 游戏 */
+.game-area{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:14px;text-align:center}
+.game-title{font-size:20px;font-weight:800;color:var(--pink-d);margin-bottom:10px}
+.game-q{font-size:18px;font-weight:600;margin:12px 0}
+.game-opts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.game-opt{padding:12px 24px;border-radius:20px;background:var(--bg2);font-size:15px;cursor:pointer;border:3px solid transparent}
+.game-opt.sel{border-color:var(--pink)}
+.game-opt.ok{background:var(--green);color:#fff;border-color:var(--green)}
+.game-opt.no{background:var(--red);color:#fff;border-color:var(--red)}
+.game-score{font-size:16px;font-weight:700;color:var(--pink-d);margin:10px 0}
+/* 宠物 */
+.pet-area{background:linear-gradient(135deg,#FFF5D6,#FFEFB0);border-radius:var(--r);padding:20px;text-align:center;box-shadow:var(--sh)}
+.pet-big{font-size:80px;margin:10px 0;cursor:pointer;transition:transform .2s}
+.pet-big:hover{transform:scale(1.05)}
+/* 宠物动画 */
+.pet-bounce{animation:petBounce .4s ease 3}
+.pet-wiggle{animation:petWiggle .3s ease 4}
+.pet-run{animation:petRun .5s ease 3}
+.pet-jump{animation:petJump .35s ease 4}
+.pet-shake{animation:petShake .3s ease 4}
+.pet-sleep{animation:petSleep 1.5s ease 2}
+@keyframes petBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+@keyframes petWiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+@keyframes petRun{0%{transform:translateX(0)}25%{transform:translateX(-20px)}75%{transform:translateX(20px)}100%{transform:translateX(0)}}
+@keyframes petJump{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.15) translateY(-20px)}}
+@keyframes petShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-15deg)}40%{transform:rotate(15deg)}60%{transform:rotate(-10deg)}80%{transform:rotate(10deg)}}
+@keyframes petSleep{0%,100%{transform:scale(1)}50%{transform:scale(.85);opacity:.7}}
+/* 语音气泡 */
+.pet-bubble-wrap{text-align:center;margin-bottom:4px}
+.pet-bubble{display:inline-block;background:var(--pink);color:#fff;font-size:14px;font-weight:600;padding:8px 16px;border-radius:16px 16px 16px 4px;animation:bubblePop .3s ease;position:relative;max-width:260px}
+.pet-bubble::after{content:'';position:absolute;bottom:-6px;left:20px;width:12px;height:12px;background:var(--pink);border-radius:0 0 12px 0;transform:rotate(20deg)}
+@keyframes bubblePop{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes remindSlide{0%{transform:translateX(-50%) translateY(-30px);opacity:0}100%{transform:translateX(-50%) translateY(0);opacity:1}}
+.pet-stats{display:flex;gap:12px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.ps-item{background:rgba(255,255,255,.6);border-radius:var(--rs);padding:8px 12px;text-align:center;min-width:80px}
+.ps-l{font-size:11px;color:var(--t2)}
+.ps-v{font-size:18px;font-weight:700}
+.ps-bar{height:6px;background:rgba(255,255,255,.3);border-radius:3px;margin-top:4px}
+.ps-fill{height:100%;border-radius:3px;transition:width .3s}
+.ps-fill.hp{background:var(--pink)}
+.ps-fill.full{background:var(--green)}
+.ps-fill.happy{background:var(--sun)}
+.ps-fill.clean{background:var(--blue-c)}
+.pet-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+.pa-btn{padding:8px 16px;border-radius:14px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:4px}
+.pa-btn.pk{background:var(--pink);color:#fff}
+.pa-btn.gn{background:var(--green);color:#fff}
+.pa-btn.lv{background:var(--lav);color:#fff}
+.pa-btn.sun{background:var(--sun-d);color:#7a5a00}
+.pa-btn.bl{background:var(--blue-c);color:#fff}
+.pa-btn.or{background:var(--orange);color:#fff}
+/* 商城 */
+.shop-item{background:#fff;border-radius:var(--r);padding:14px;box-shadow:var(--sh);text-align:center}
+.shop-emoji{font-size:36px;margin-bottom:6px}
+.shop-n{font-weight:600;font-size:14px}
+.shop-d{font-size:12px;color:var(--t2);margin-bottom:6px}
+.shop-p{color:#C88A00;font-weight:700;font-size:15px;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:2px}
+/* 错题本 */
+.err-item{background:var(--bg2);border-radius:var(--rs);padding:12px;margin-bottom:8px}
+.err-q{font-size:14px;font-weight:600;color:var(--pink-d)}
+.err-a{font-size:13px;color:var(--green-d);margin-top:4px}
+.err-date{font-size:11px;color:var(--t2)}
+/* 预习内容 */
+.learn-box{background:linear-gradient(135deg,#FFF8F0,#FFEEF5);border-radius:var(--r);padding:14px;margin-bottom:12px;cursor:pointer;border:2px dashed var(--pink-l)}
+.learn-header{font-size:14px;font-weight:600;color:var(--pink-d);text-align:center}
+.learn-content{display:none;text-align:left;font-size:13px;color:var(--t1);line-height:1.7;padding-top:10px;border-top:1px dashed var(--pink-l);margin-top:8px}
+.learn-content.open{display:block}
+.learn-content b{color:var(--pink-d)}
+.learn-content br+br{margin-top:4px}
+/* 弹窗 */
+.mm{display:none;position:fixed;inset:0;background:rgba(90,60,110,.45);z-index:200;align-items:center;justify-content:center;padding:16px}
+.mm.show{display:flex}
+.mc{background:#fff;border-radius:var(--r);max-width:460px;width:100%;max-height:85vh;overflow-y:auto;padding:22px;animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.mt{font-size:18px;font-weight:800;text-align:center;color:var(--pink-d);margin-bottom:4px}
+.ms{text-align:center;color:var(--t2);font-size:13px;margin-bottom:14px}
+.mf{margin-top:16px;display:flex;gap:8px}
+.bpr{flex:1;padding:10px;border-radius:12px;background:var(--pink);color:#fff;font-size:14px;font-weight:600}
+.bpr:hover{background:var(--pink-d)}
+.bse{flex:1;padding:10px;border-radius:12px;background:var(--bg2);color:var(--t2);font-size:14px}
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--t1);color:#fff;padding:10px 24px;border-radius:20px;font-size:13px;z-index:300;opacity:0;transition:all .25s;max-width:90vw;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok{background:var(--green-d)}
+.toast.no{background:var(--pink-d)}
+/* 打卡 */
+.ck-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bg2)}
+.ck-item:last-child{border-bottom:none}
+.ck-box{width:20px;height:20px;border:2px solid var(--pink);border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;color:#fff;transition:all .2s}
+.ck-box.done{background:var(--green);border-color:var(--green)}
+.ck-txt{font-size:14px;flex:1}
+.ck-txt.done{color:var(--t3);text-decoration:line-through}
+.ck-pts{font-size:12px;color:#C88A00;font-weight:600}
+.ck-del{font-size:11px;color:var(--red);cursor:pointer;padding:4px 8px;border-radius:6px;background:var(--bg2)}
+.ck-undo{font-size:11px;color:var(--orange);cursor:pointer;padding:4px 8px;border-radius:6px;background:var(--bg2);margin-left:2px}
+.ck-undo:active{background:#FFE4EC}
+/* 自定义任务 */
+.add-task{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.at-input{flex:1;min-width:150px;padding:8px 12px;border-radius:10px;border:2px solid var(--pink-l);font-size:13px;outline:none}
+.at-input:focus{border-color:var(--pink)}
+.at-pts{width:60px;padding:8px;border-radius:10px;border:2px solid var(--pink-l);font-size:13px;text-align:center}
+.at-btn{padding:8px 16px;border-radius:10px;background:var(--pink);color:#fff;font-size:13px;font-weight:600}
+/* 响应式 */
+@media(max-width:1024px){:root{--nav-w:var(--nav-w2)}.nav-head{padding:14px 10px}.brand-t{font-size:12px}.nav-item{font-size:13px;padding:8px 10px}}
+@media(max-width:768px){:root{--nav-w:0px}.nav{width:220px;transform:translateX(-100%);transition:transform .25s}.nav.open{transform:translateX(0)}.mob-head{display:flex}.main{margin-left:0;margin-top:var(--hh)}.content{padding:14px 10px}.grid2{grid-template-columns:1fr}}
+@media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}.sc{padding:12px 10px}.sc .sv{font-size:20px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="mob-head">
+<button class="ham" onclick="toggleNav()">☰</button>
+<div class="mob-brand"><div class="logo">奶牛</div><span class="brand-t">学习乐园</span></div>
+<div class="mob-pts">☀ <span id="mPts">0</span></div>
+</div>
+<div class="overlay" id="ov" onclick="closeNav()"></div>
+<aside class="nav" id="nav">
+<div class="nav-head"><div class="logo">奶牛</div><div class="brand"><span class="brand-t">宠物奶牛·学习乐园</span><span class="brand-s">二升三暑假工作台</span></div></div>
+<nav class="nav-menu" id="nm">
+<div class="nav-item on" data-p="plan" onclick="go('plan')"><span class="nav-ico">📋</span><span>今日计划</span></div>
+<div class="nav-item" data-p="cn" onclick="go('cn')"><span class="nav-ico">📝</span><span>语文</span></div>
+<div class="nav-item" data-p="math" onclick="go('math')"><span class="nav-ico">🔢</span><span>数学</span></div>
+<div class="nav-item" data-p="eng" onclick="go('eng')"><span class="nav-ico">🔤</span><span>英语</span></div>
+<div class="nav-item" data-p="sport" onclick="go('sport')"><span class="nav-ico">🏃</span><span>运动</span></div>
+<div class="nav-item" data-p="game" onclick="go('game')"><span class="nav-ico">🎮</span><span>小游戏</span></div>
+<div class="nav-item" data-p="pet" onclick="go('pet')"><span class="nav-ico">🐾</span><span>宠物狗</span></div>
+<div class="nav-item" data-p="shop" onclick="go('shop')"><span class="nav-ico">🛒</span><span>积分商城</span></div>
+</nav>
+<div class="nav-foot">
+<div class="pet-mini"><span class="pet-emoji" id="pmEmoji">🐶</span><div class="pet-info"><div class="pet-name" id="pmName">奶牛</div><div class="pet-bar"><div class="pet-bar-fill" id="pmBar" style="width:80%"></div></div></div></div>
+</div>
+</aside>
+<main class="main"><div class="content" id="ct"></div></main>
+</div>
+<div class="mm" id="mm"><div class="mc" id="mc"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== 教材数据 ===== */
+const POEMS=[
+{id:'p1',t:'山行',a:'杜牧',b:'三上',l:['远上寒山石径斜(xié)','白云生处有人家','停车坐爱枫林晚','霜叶红于二月花'],py:['xié','yǐn'],def:[{'寒山':'深秋时节的山','石径斜':'山路倾斜向上','霜叶':'经霜的枫叶'}],fill:1,r:5},
+{id:'p2',t:'赠刘景文',a:'苏轼',b:'三上',l:['荷尽已无擎(qíng)雨盖','菊残犹有傲霜枝','一年好景君须记','最是橙黄橘(jú)绿时'],py:['qíng','jú'],def:[{'擎雨盖':'托着雨伞似的荷叶','傲霜枝':'不怕霜打的菊枝','橙黄橘绿':'秋末初冬的美景'}],fill:0,r:5},
+{id:'p3',t:'夜书所见',a:'叶绍翁',b:'三上',l:['萧萧梧(wú)叶送寒声','江上秋风动客情','知有儿童挑(tiǎo)促织','夜深篱落一灯明'],py:['wú','tiǎo'],def:[{'萧萧':'风声','促织':'蟋蟀','篱落':'篱笆'}],fill:2,r:5},
+{id:'p4',t:'望天门山',a:'李白',b:'三上',l:['天门中断楚江开','碧水东流至此回(huí)','两岸青山相对出','孤帆一片日边来'],py:['huí'],def:[{'楚江':'长江','至此回':'在这里转弯','孤帆':'一只小船'}],fill:1,r:5},
+{id:'p5',t:'望洞庭',a:'刘禹锡',b:'三上',l:['湖光秋月两相和(hé)','潭面无风镜未磨','遥望洞庭山水翠','白银盘里一青螺(luó)'],py:['hé','luó'],def:[{'两相和':'相互交融','镜未磨':'水面平静如未打磨的铜镜','青螺':'洞庭湖中的君山'}],fill:3,r:5},
+{id:'p6',t:'早发白帝城',a:'李白',b:'三上',l:['朝辞白帝彩云间','千里江陵一日还(huán)','两岸猿声啼不住','轻舟已过万重山'],py:['huán'],def:[{'朝辞':'早晨离开','一日还':'一天就到了','万重山':'重重叠叠的山峦'}],fill:1,r:5},
+{id:'p7',t:'饮湖上初晴后雨',a:'苏轼',b:'三上',l:['水光潋滟(liàn yàn)晴方好','山色空蒙雨亦奇','欲把西湖比西子','淡妆浓抹总相宜'],py:['liàn yàn'],def:[{'潋滟':'水波荡漾闪烁的样子','空蒙':'云雾迷茫','西子':'西施，美女','淡妆浓抹':'无论淡雅还是浓艳'}],fill:1,r:5},
+{id:'p8',t:'采莲曲',a:'王昌龄',b:'三上',l:['荷叶罗裙一色裁','芙蓉向脸两边开','乱入池中看不见','闻歌始觉有人来'],py:[],def:[{'罗裙':'丝绸裙子','芙蓉':'荷花','乱入':'混入莲池中','闻歌':'听到歌声'}],fill:2,r:5},
+{id:'p9',t:'鹿柴(zhài)',a:'王维',b:'三上',l:['空山不见人','但闻人语响','返景(yǐng)入深林','复照青苔上'],py:['zhài','yǐng'],def:[{'鹿柴':'养鹿的栅栏，柴通寨','但闻':'只听到','返景':'夕阳返照','青苔':'绿色的苔藓'}],fill:2,r:5},
+{id:'p10',t:'所见',a:'袁枚',b:'三上',l:['牧童骑黄牛','歌声振林樾(yuè)','意欲捕鸣蝉','忽然闭口立'],py:['yuè'],def:[{'振林樾':'歌声震动了树林','意欲':'想要','鸣蝉':'叫着的蝉','闭口立':'突然闭嘴站立'}],fill:1,r:5}
+]
+
+const MATH_COURSE=[
+{id:'m1',t:'两步四则运算与应用题',sub:[
+{id:'m1-1',t:'两步四则运算',tip:'先乘除后加减，有括号先算括号',learn:'<b>运算规则：</b><br>① 在没有括号的算式里，先算乘除，再算加减。<br>② 有括号的算式，先算括号里面的。<br><br><b>例题：</b><br>3 + 4 × 2 = ？<br>→ 先算乘法：4 × 2 = 8<br>→ 再算加法：3 + 8 = <b>11</b><br><br>(3 + 4) × 2 = ？<br>→ 先算括号：3 + 4 = 7<br>→ 再算乘法：7 × 2 = <b>14</b><br><br>⚠️ <b>注意：</b>运算顺序不同，结果可能不同！'},
+{id:'m1-2',t:'应用题',tip:'读懂题意，找出数量关系，列式计算',learn:'<b>解题步骤：</b><br>① 读题：仔细读2遍，圈出数字和关键词<br>② 找关系：加→合在一起，减→去掉/相差，乘→几个几，除→平均分<br>③ 列式：根据关系写出算式<br>④ 检验：把答案代回题目看是否合理<br><br><b>例题：</b><br>小明有8颗糖，小红比小明多5颗，他们一共有多少颗？<br>→ 小红：8 + 5 = 13颗<br>→ 一共：8 + 13 = <b>21颗</b>'}
+]},
+{id:'m2',t:'用一位数乘',sub:[
+{id:'m2-1',t:'一位数乘整十数、整百数',tip:'先乘0前面的数，再添0',learn:'<b>方法：</b>先把0前面的数相乘，再看末尾有几个0就添几个0。<br><br><b>例题：</b><br>3 × 40 = ？<br>→ 3 × 4 = 12 → 添1个0 → <b>120</b><br><br>5 × 200 = ？<br>→ 5 × 2 = 10 → 添2个0 → <b>1000</b><br><br>⚠️ <b>易错点：</b>3 × 40 ≠ 30 × 40！前面只有1个0。'},
+{id:'m2-2',t:'一位数乘两位数',tip:'从个位起逐位相乘',learn:'<b>方法：</b>从个位起，用一位数依次乘两位数的每一位，满几十就向前一位进几。<br><br><b>例题：</b> 23 × 4 = ？<br>→ 3 × 4 = 12 → 写2进1<br>→ 2 × 4 = 8 → 8 + 1 = 9<br>→ 结果：<b>92</b><br><br>⚠️ <b>进位别忘了！</b> 46 × 3：<br>→ 6×3=18(写8进1) → 4×3=12 → 12+1=13 → <b>138</b>'},
+{id:'m2-3',t:'一位数乘三位数',tip:'注意进位，逐位相乘',learn:'<b>方法：</b>同两位数乘法，从个位起逐位乘，注意连续进位。<br><br><b>例题：</b> 125 × 3 = ？<br>→ 5×3=15 → 写5进1<br>→ 2×3=6 → 6+1=7 → 写7<br>→ 1×3=3 → 写3<br>→ 结果：<b>375</b><br><br>⚠️ <b>连续进位：</b> 486 × 5<br>→ 6×5=30(写0进3) → 8×5=40 → 40+3=43(写3进4) → 4×5=20 → 20+4=24 → <b>2430</b>'},
+{id:'m2-4',t:'估算',tip:'先近似到整十整百再计算',learn:'<b>方法：</b>把数近似到最近的整十或整百数，再计算，得出大约的结果。<br><br><b>例题：</b><br>48 × 3 ≈ ？<br>→ 48 近似为 50<br>→ 50 × 3 = <b>150</b>（大约）<br>→ 实际：48 × 3 = 144<br><br>⚠️ <b>估算用途：</b>检查计算结果是否合理。如果你算出48×3=544，估算≈150告诉你结果不对！'}
+]},
+{id:'m3',t:'三角形与四边形',sub:[
+{id:'m3-1',t:'角的初步认识',tip:'角有顶点和两条边，角的大小与边长短无关',learn:'<b>角的知识：</b><br>① 角由一个<b>顶点</b>和两条<b>边</b>组成<br>② 角的大小看两条边<b>张开程度</b>，与边的长短<b>无关</b><br>③ 角的分类：<br>　<b>锐角</b>：比直角小（张开窄）<br>　<b>直角</b>：刚好90°（像L形）<br>　<b>钝角</b>：比直角大（张开宽）<br><br>⚠️ <b>易错：</b>边画得长长的角不一定大！角的大小只看张开程度。'},
+{id:'m3-2',t:'三角形与四边形的初步认识',tip:'三角形三条边三个角，四边形四条边四个角',learn:'<b>三角形：</b><br>① 有<b>3条边</b>和<b>3个角</b><br>② 三条边首尾相连围成封闭图形<br>③ 按角分类：锐角三角形、直角三角形、钝角三角形<br><br><b>四边形：</b><br>① 有<b>4条边</b>和<b>4个角</b><br>② 特殊四边形：<br>　<b>长方形</b>：对边相等，4个直角<br>　<b>正方形</b>：4条边相等，4个直角<br>　<b>平行四边形</b>：对边平行且相等<br><br>⚠️ <b>记住：</b>三角形最少需要3条线段，四边形最少需要4条线段才能围成。'}
+]},
+{id:'m4',t:'用一位数除',sub:[
+{id:'m4-1',t:'一位数除整十数、整百数',tip:'先用0前面的数除，再添0',learn:'<b>方法：</b>先把末尾的0去掉，用0前面的数除，再看去掉几个0就补几个0。<br><br><b>例题：</b><br>60 ÷ 3 = ？<br>→ 6 ÷ 3 = 2 → 补1个0 → <b>20</b><br><br>400 ÷ 2 = ？<br>→ 4 ÷ 2 = 2 → 补2个0 → <b>200</b><br><br>⚠️ <b>注意：</b>80 ÷ 4 → 8÷4=2 → 补1个0 → 20，不是200！'},
+{id:'m4-2',t:'一位数除两位数',tip:'从高位起逐位除',learn:'<b>方法：</b>从高位（十位）起除，除到哪位商写在哪位上面，余数要比除数小。<br><br><b>例题：</b> 48 ÷ 3 = ？<br>→ 4÷3=1余1 → 十位商1<br>→ 余下的1和8合成18 → 18÷3=6 → 个位商6<br>→ 结果：<b>16</b><br><br>⚠️ <b>余数规则：</b>每次除完余数必须<b>比除数小</b>！<br>如 53 ÷ 4 → 十位5÷4=1余1 → 13÷4=3余1 → <b>13余1</b>'},
+{id:'m4-3',t:'倍',tip:'求倍数用乘法，求一倍量用除法',learn:'<b>倍的概念：</b><br>① "A是B的几倍" → 用<b>除法</b>：A ÷ B<br>② "A的3倍是多少" → 用<b>乘法</b>：A × 3<br>③ "A比B多几倍" → (A - B) ÷ B<br><br><b>例题：</b><br>小明有6颗糖，小红有18颗，小红是小明的几倍？<br>→ 18 ÷ 6 = <b>3倍</b><br><br>小明有6颗糖，他的3倍是多少？<br>→ 6 × 3 = <b>18颗</b><br><br>⚠️ <b>分清：</b>"求几倍"用÷，"求几倍是多少"用×'},
+{id:'m4-4',t:'一位数除三位数',tip:'注意余数要比除数小',learn:'<b>方法：</b>同两位数除法，从百位起依次除，每步余数都要比除数小。<br><br><b>例题：</b> 156 ÷ 4 = ？<br>→ 1÷4不够商 → 看前两位15<br>→ 15÷4=3余3 → 百位十位商3<br>→ 余3和6合成36 → 36÷4=9 → 个位商9<br>→ 结果：<b>39</b><br><br>⚠️ <b>首位不够除：</b>看前两位！如156÷4，百位1不够除4，要看15÷4。'},
+{id:'m4-5',t:'除法的应用',tip:'平均分、包含除等问题',learn:'<b>两种除法类型：</b><br>① <b>平均分</b>：把总数平均分成几份，每份多少？<br>　例：12颗糖分给3人，每人几颗？→ 12÷3=<b>4颗</b><br><br>② <b>包含除</b>：总数里包含几个每份的数量？<br>　例：12颗糖每4颗一包，能分几包？→ 12÷4=<b>3包</b><br><br>⚠️ <b>审题关键：</b>看清是"每份多少"还是"能分多少份"，列式可能相同但含义不同！'},
+{id:'m4-6',t:'单价、数量、总价',tip:'总价=单价×数量',learn:'<b>三个量之间的关系：</b><br>① <b>总价</b> = 单价 × 数量<br>② <b>单价</b> = 总价 ÷ 数量<br>③ <b>数量</b> = 总价 ÷ 单价<br><br><b>例题：</b><br>铅笔每支3元，买了5支，总价多少？→ 3×5=<b>15元</b><br><br>花15元买了5支铅笔，每支多少？→ 15÷5=<b>3元</b><br><br>铅笔3元一支，15元能买几支？→ 15÷3=<b>5支</b><br><br>⚠️ <b>口诀：</b>知道两个量就能求第三个量，乘除互逆！'}
+]},
+{id:'m5',t:'年、月、日的秘密',sub:[
+{id:'m5-1',t:'制作作息时间表',tip:'1时=60分，1分=60秒',learn:'<b>时间单位换算：</b><br>① <b>1时 = 60分</b><br>② <b>1分 = 60秒</b><br>③ 1时 = 3600秒<br><br><b>计算经过时间：</b><br>→ 结束时间 - 开始时间 = 经过时间<br>→ 例：8:30到9:15，经过了？<br>　 9:15 - 8:30 → 60-30=30分 → <b>45分钟</b><br><br><b>作息时间表：</b>合理安排每天的学习、休息、运动时间。<br><br>⚠️ <b>易错：</b>8:50到9:20不是70分钟！→ 10+20=30分钟。'},
+{id:'m5-2',t:'制作月历牌',tip:'大月31天小月30天，二月28或29天',learn:'<b>月份天数：</b><br>① <b>大月</b>（31天）：1、3、5、7、8、10、12月<br>② <b>小月</b>（30天）：4、6、9、11月<br>③ <b>二月</b>：平年28天，闰年29天<br><br><b>记忆口诀：</b><br>"一三五七八十腊，三十一天永不差"<br>（腊=12月）<br><br><b>闰年判断：</b><br>→ 年份÷4，能整除是闰年<br>→ 但整百年需÷400才闰<br>　例：2024÷4=506 → <b>闰年</b><br>　1900÷400≠5 → <b>不是闰年</b>'}
+]},
+{id:'m6',t:'周长',sub:[
+{id:'m6-1',t:'长度的测量',tip:'毫米、厘米、分米、米的关系',learn:'<b>长度单位换算：</b><br>① 1米 = 10分米 = 100厘米 = 1000毫米<br>② 1分米 = 10厘米<br>③ 1厘米 = 10毫米<br><br><b>测量方法：</b><br>→ 尺的0刻度对齐物体一端<br>→ 读另一端对应的刻度<br>→ 看清楚单位（cm/mm）<br><br><b>估测参考：</b><br>→ 1厘米 ≈ 指甲盖宽度<br>→ 1分米 ≈ 手掌长度<br>→ 1米 ≈ 一步的距离<br><br>⚠️ <b>注意：</b>测量要从0刻度开始，不是从尺的边缘！'},
+{id:'m6-2',t:'长方形、正方形的周长',tip:'长方形周长=2(长+宽)，正方形周长=4×边长',learn:'<b>周长公式：</b><br>① <b>长方形</b>周长 = 2 × (长 + 宽)<br>　 或 = 长 + 长 + 宽 + 宽<br>② <b>正方形</b>周长 = 4 × 边长<br><br><b>例题：</b><br>长方形长5cm宽3cm，周长？<br>→ 2 × (5 + 3) = 2 × 8 = <b>16cm</b><br><br>正方形边长4cm，周长？<br>→ 4 × 4 = <b>16cm</b><br><br><b>逆运算：</b><br>已知长方形周长20cm，长6cm，宽？<br>→ 20 ÷ 2 = 10 → 10 - 6 = <b>4cm</b>'}
+]},
+{id:'m7',t:'马拉松的路线设计',sub:[{id:'m7-1',t:'路线设计与优化',tip:'最短路线问题',learn:'<b>最短路线问题：</b><br>① 从A到B，要走最短的路<br>② 方法：数横向步数 + 纵向步数<br>③ 只能向右和向下走时，最短路线数 = 组合数<br><br><b>简单规则：</b><br>→ 网格中从左上到右下，只能→右和↓下<br>→ 每一步选择：向右走还是向下走<br>→ 最短步数 = 横向格数 + 纵向格数<br><br><b>例：</b>2×3网格（2列3行）<br>→ 最短路线有 C(5,2)=10 条<br><br>⚠️ <b>思路：</b>不走回头路，不绕远，每步都朝目标靠近！'}]},
+{id:'m8',t:'数学广场',sub:[{id:'m8-1',t:'趣味数学',tip:'数学思维拓展',learn:'<b>趣味数学思维：</b><br>① <b>找规律</b>：观察数字变化规律填空<br>　 例：2, 4, 6, 8, __ → <b>10</b>（每次+2）<br>　 例：1, 2, 4, 8, __ → <b>16</b>（每次×2）<br><br>② <b>逻辑推理</b>：根据已知条件推理<br>　 例：小明比小红大，小红比小刚大 → 小明>小红>小刚<br><br>③ <b>巧算</b>：利用运算性质简化计算<br>　 例：25 × 4 = 100 → 25 × 8 = 25 × 4 × 2 = 200<br><br>⚠️ <b>秘诀：</b>多观察、多思考、找规律！'}]},
+{id:'m9',t:'复习',sub:[{id:'m9-1',t:'全册复习',tip:'综合运用所学知识',learn:'<b>三年级上册重点回顾：</b><br>① <b>运算</b>：先乘除后加减，有括号先算<br>② <b>乘法</b>：一位数乘多位数，注意进位<br>③ <b>除法</b>：一位数除多位数，余数比除数小<br>④ <b>图形</b>：角的认识，三角形与四边形<br>⑤ <b>时间</b>：时分秒换算，年月日<br>⑥ <b>周长</b>：长方形周长=2(长+宽)<br>⑦ <b>应用</b>：单价×数量=总价<br><br><b>复习方法：</b><br>→ 每个章节做3-5道综合题<br>→ 错题重新做一遍<br>→ 用思维导图串联知识点<br><br>⚠️ <b>关键：</b>不是记公式，而是理解为什么！'}]}
+]
+
+const ENG_UNITS=[
+{id:'u1',t:'Unit1 School',words:['school','classmate','teacher','play sports','read','book','study','friend']},
+{id:'u2',t:'Unit2 Hobbies',words:['draw','tell a story','dance','sing','use the computer','run','jump']},
+{id:'u3',t:'Unit3 Garden',words:['garden','flower','vegetable','plant','orange tree','tomato','carrot']},
+{id:'u4',t:'Unit4 Water',words:['water','river','lake','sea','water vapour','cloud','rain','snow','ice']},
+{id:'u5',t:'Unit5 Helping',words:['help','cook','do the dishes','clean the table','walk the dog','chore','give your seat']},
+{id:'u6',t:'Unit6 Feelings',words:['happy','sad','good','bad','excited','scared','tired','unhappy']},
+{id:'u7',t:'Unit7 Jobs',words:['driver','police officer','engineer','author','doctor','chef','astronaut']},
+{id:'u8',t:'Unit8 Places',words:['library','find the way','get to','walk along','road','left','right','get lost','museum']},
+{id:'u9',t:'Unit9 Festivals',words:['special days','the Double Ninth Festival','celebrate','Chinese New Year','the Spring Festival','the Lantern Festival','holiday']},
+{id:'u10',t:'Unit10 Food',words:['food','noodles','pizza','sandwich','hot dog','meatball','fish and chips','beef','bread','cake']}
+]
+
+/* 数学练习题生成器 */
+function genMathQuiz(lessonId){
+const quizzes={
+'m1-1':()=>[{q:'36+4×5=?',opts:['56','20','46'],ans:0},{q:'(8+2)×3=?',opts:['30','24','11'],ans:0},{q:'72-6×3=?',opts:['54','18','66'],ans:0},{q:'(15-7)×4=?',opts:['32','8','60'],ans:0},{q:'20+3×6=?',opts:['38','48','23'],ans:0}],
+'m1-2':()=>[{q:'小明有30元，买了3本书每本8元，还剩多少元？',opts:['6元','54元','22元'],ans:0},{q:'操场有4排椅子，每排6把，又搬来5把，共多少把？',opts:['29','24','11'],ans:0},{q:'妈妈买了2千克苹果每千克12元，付50元找回多少？',opts:['26元','38元','24元'],ans:0},{q:'有36个学生，平均分成6组，每组几人？',opts:['6人','30人','42人'],ans:0},{q:'一箱有24瓶水，3箱共多少瓶？',opts:['72','27','21'],ans:0}],
+'m2-1':()=>[{q:'3×40=?',opts:['120','43','12'],ans:0},{q:'5×300=?',opts:['1500','53','150'],ans:0},{q:'7×60=?',opts:['420','67','42'],ans:0},{q:'8×200=?',opts:['1600','82','160'],ans:0},{q:'4×50=?',opts:['200','45','20'],ans:0}],
+'m2-2':()=>[{q:'3×24=?',opts:['72','27','54'],ans:0},{q:'6×15=?',opts:['90','65','30'],ans:0},{q:'4×37=?',opts:['148','47','104'],ans:0},{q:'7×23=?',opts:['161','73','56'],ans:0},{q:'5×48=?',opts:['240','53','200'],ans:0}],
+'m2-3':()=>[{q:'4×123=?',opts:['492','127','369'],ans:0},{q:'3×256=?',opts:['768','259','512'],ans:0},{q:'6×145=?',opts:['870','151','600'],ans:0},{q:'5×178=?',opts:['890','183','715'],ans:0},{q:'7×109=?',opts:['763','116','700'],ans:0}],
+'m2-4':()=>[{q:'估算 3×48≈?',opts:['150','120','90'],ans:0},{q:'估算 6×31≈?',opts:['180','60','186'],ans:0},{q:'估算 4×52≈?',opts:['200','160','208'],ans:0},{q:'估算 5×79≈?',opts:['400','350','395'],ans:0},{q:'估算 7×22≈?',opts:['140','70','154'],ans:0}],
+'m3-1':()=>[{q:'角有几个顶点？',opts:['1个','2个','3个'],ans:0},{q:'角的大小与什么有关？',opts:['两边张开的大小','边的长短','顶点的位置'],ans:0},{q:'直角是多少度？',opts:['90°','60°','180°'],ans:0},{q:'三角尺上有几个角？',opts:['3个','2个','1个'],ans:0},{q:'比直角小的角叫什么？',opts:['锐角','钝角','平角'],ans:0}],
+'m3-2':()=>[{q:'三角形有几条边？',opts:['3条','4条','5条'],ans:0},{q:'四边形有几个角？',opts:['4个','3个','2个'],ans:0},{q:'长方形是什么形状？',opts:['特殊的四边形','三角形','圆'],ans:0},{q:'正方形的四条边？',opts:['都相等','两条相等','都不等'],ans:0},{q:'三角形三个角的和是？',opts:['180°','90°','360°'],ans:0}],
+'m4-1':()=>[{q:'60÷3=?',opts:['20','6','2'],ans:0},{q:'400÷5=?',opts:['80','40','8'],ans:0},{q:'90÷3=?',opts:['30','9','3'],ans:0},{q:'800÷4=?',opts:['200','80','8'],ans:0},{q:'210÷7=?',opts:['30','21','3'],ans:0}],
+'m4-2':()=>[{q:'48÷4=?',opts:['12','8','16'],ans:0},{q:'72÷6=?',opts:['12','18','6'],ans:0},{q:'96÷8=?',opts:['12','14','8'],ans:0},{q:'56÷4=?',opts:['14','12','7'],ans:0},{q:'84÷7=?',opts:['12','14','7'],ans:0}],
+'m4-3':()=>[{q:'6的3倍是多少？',opts:['18','9','3'],ans:0},{q:'24是8的几倍？',opts:['3倍','4倍','2倍'],ans:0},{q:'5的7倍是多少？',opts:['35','12','2'],ans:0},{q:'36是9的几倍？',opts:['4倍','3倍','6倍'],ans:0},{q:'7的5倍是多少？',opts:['35','12','3'],ans:0}],
+'m4-4':()=>[{q:'156÷3=?',opts:['52','51','46'],ans:0},{q:'248÷4=?',opts:['62','58','31'],ans:0},{q:'375÷5=?',opts:['75','55','15'],ans:0},{q:'189÷9=?',opts:['21','19','18'],ans:0},{q:'126÷6=?',opts:['21','20','18'],ans:0}],
+'m4-5':()=>[{q:'把45颗糖平均分给9人，每人几颗？',opts:['5颗','4颗','6颗'],ans:0},{q:'36个苹果每6个装一袋，可装几袋？',opts:['6袋','5袋','7袋'],ans:0},{q:'72÷8可以解决什么问题？',opts:['72个东西平均分8份','8个东西合72份','72加8'],ans:0},{q:'48个同学站6排，每排几人？',opts:['8人','6人','42人'],ans:0},{q:'100米跑道跑5圈共多少米？',opts:['500米','105米','50米'],ans:0}],
+'m4-6':()=>[{q:'单价3元，买5个，总价多少？',opts:['15元','8元','2元'],ans:0},{q:'总价24元，单价4元，买了几个？',opts:['6个','8个','20个'],ans:0},{q:'买了7本书，总价35元，单价？',opts:['5元','7元','28元'],ans:0},{q:'单价6元×8=?',opts:['48元','14元','68元'],ans:0},{q:'总价60元÷数量12=?',opts:['5元','48元','6元'],ans:0}],
+'m5-1':()=>[{q:'1时=?分',opts:['60','100','30'],ans:0},{q:'1分=?秒',opts:['60','100','30'],ans:0},{q:'2时30分=?分',opts:['150','230','90'],ans:0},{q:'从8:00到9:30经过？',opts:['1时30分','1时','30分'],ans:0},{q:'180秒=?分',opts:['3分','2分','18分'],ans:0}],
+'m5-2':()=>[{q:'一年有几个月？',opts:['12','10','6'],ans:0},{q:'大月有几天？',opts:['31天','30天','28天'],ans:0},{q:'平年二月有几天？',opts:['28天','29天','30天'],ans:0},{q:'闰年二月有几天？',opts:['29天','28天','30天'],ans:0},{q:'一年共有几天(平年)？',opts:['365天','366天','360天'],ans:0}],
+'m6-1':()=>[{q:'1米=?厘米',opts:['100','10','1000'],ans:0},{q:'1分米=?厘米',opts:['10','100','1'],ans:0},{q:'3米5厘米=?厘米',opts:['305','35','350'],ans:0},{q:'1千米=?米',opts:['1000','100','10'],ans:0},{q:'80毫米=?厘米',opts:['8','80','0.8'],ans:0}],
+'m6-2':()=>[{q:'长方形长5宽3，周长？',opts:['16','15','8'],ans:0},{q:'正方形边长4，周长？',opts:['16','8','12'],ans:0},{q:'长方形长8宽5，周长？',opts:['26','40','13'],ans:0},{q:'正方形边长7，周长？',opts:['28','14','21'],ans:0},{q:'长方形长10宽6，周长？',opts:['32','60','16'],ans:0}]
+};
+const fn=quizzes[lessonId];
+return fn?fn():[{q:'练习题1',opts:['A','B','C'],ans:0},{q:'练习题2',opts:['A','B','C'],ans:0},{q:'练习题3',opts:['A','B','C'],ans:0},{q:'练习题4',opts:['A','B','C'],ans:0},{q:'练习题5',opts:['A','B','C'],ans:0}];
+}
+
+/* 商城商品 */
+const SHOP=[
+{id:'f1',e:'🥩',n:'狗粮',d:'美味营养狗粮',p:5,t:'food'},
+{id:'f2',e:'💧',n:'清水',d:'干净饮用水',p:3,t:'water'},
+{id:'f3',e:'🧸',n:'玩具球',d:'彩色弹力球',p:8,t:'toy'},
+{id:'f4',e:'🪥',n:'牙刷',d:'宠物专用牙刷',p:6,t:'clean'},
+{id:'f5',e:'🛁',n:'洗浴套装',d:'香波+毛巾',p:10,t:'clean'},
+{id:'f6',e:'🦴',n:'磨牙棒',d:'健康磨牙零食',p:7,t:'toy'},
+{id:'f7',e:'⚽',n:'飞盘',d:'户外飞盘玩具',p:12,t:'toy'},
+{id:'f8',e:'🏠',n:'小窝',d:'舒适宠物窝',p:20,t:'home'},
+{id:'f9',e:'🎀',n:'蝴蝶结',d:'粉色蝴蝶结',p:4,t:'dress'},
+{id:'f10',e:'🧣',n:'小围巾',d:'保暖小围巾',p:6,t:'dress'}
+]
+
+/* ===== 全局状态 ===== */
+let S;
+const KEY='sunFlowerState';
+function today(){return new Date().toISOString().slice(0,10)}
+function defS(){return{pts:0,date:today(),reset:today(),
+ck:{cn_poem:false,cn_read:false,cn_write:false,cn_reading:false,cn_copy:false,
+math_calc:false,math_err:false,math_preview:false,
+eng_word:false,eng_trace:false,eng_read:false,
+sport:false},
+cnPoemIdx:0,cnReadMin:0,
+mathLesson:null,mathQuizDone:{},mathErrBook:[],
+engWordDone:{},engErrBook:[],
+poems:{},
+pet:{name:'奶牛',emoji:'🐶',hp:80,full:70,happy:60,clean:50},
+petOwned:[],
+petAnim:'',petSpeech:'',petAnimEmoji:'',petAnimTime:0,
+records:{},
+customTasks:[]
+}}
+
+function load(){try{S=JSON.parse(localStorage.getItem(KEY))||defS()}catch(e){S=defS()}
+if(S.reset!==today()){Object.keys(S.ck).forEach(k=>S.ck[k]=false);S.reset=today();S.cnPoemIdx=0;S.cnReadMin=0}
+// 确保新字段
+if(!S.customTasks)S.customTasks=[];if(!S.mathErrBook)S.mathErrBook=[];if(!S.engErrBook)S.engErrBook=[];
+if(!S.pet)S.pet=defS().pet;if(S.pet.name==='小花')S.pet.name='奶牛';if(!S.petOwned)S.petOwned=[];if(!S.mathQuizDone)S.mathQuizDone={};if(!S.engWordDone)S.engWordDone={};if(!S.petAnim)S.petAnim='';if(!S.petSpeech)S.petSpeech='';if(!S.petAnimEmoji)S.petAnimEmoji='';if(!S.petAnimTime)S.petAnimTime=0;
+// 如果动画状态超过3秒，自动清除过期动画
+if(S.petAnimTime&&Date.now()-S.petAnimTime>3000){S.petAnim='';S.petSpeech='';S.petAnimEmoji='';S.petAnimTime=0}
+save();updUI()
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function updUI(){
+document.getElementById('mPts').textContent=S.pts;
+// 更新侧栏宠物
+const p=S.pet;
+document.getElementById('pmEmoji').textContent=p.emoji;
+document.getElementById('pmName').textContent=p.name;
+document.getElementById('pmBar').style.width=Math.max(p.hp,p.full,p.happy,p.clean)+'%';
+}
+function toast(m,t=''){const e=document.getElementById('toast');e.textContent=m;e.className='toast '+t+' show';clearTimeout(window._tt);window._tt=setTimeout(()=>e.className='toast '+t,2200)}
+
+/* 导航 */
+function go(p){
+document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('on',n.dataset.p===p));
+document.getElementById('ct').innerHTML=render(p);
+location.hash=p;closeNav();window.scrollTo(0,0)
+}
+function toggleNav(){document.getElementById('nav').classList.toggle('open');document.getElementById('ov').classList.toggle('show')}
+function closeNav(){document.getElementById('nav').classList.remove('open');document.getElementById('ov').classList.remove('show')}
+function clM(){document.getElementById('mm').classList.remove('show')}
+
+/* 打卡 */
+function ck(key,pts){
+if(S.ck[key]){
+// 撤回打卡
+S.ck[key]=false;S.pts-=pts;
+const d=today();if(S.records[d]){S.records[d].cks--;S.records[d].pts-=pts;if(S.records[d].cks<=0)delete S.records[d]}
+save();updUI();toast(`已撤回打卡，-${pts}积分`,'no');go(location.hash.replace('#','')||'plan')
+}else{
+// 打卡
+S.ck[key]=true;S.pts+=pts;
+const d=today();if(!S.records[d])S.records[d]={cks:0,pts:0};
+S.records[d].cks++;S.records[d].pts+=pts;
+save();updUI();toast(`打卡成功！+${pts}积分`,'ok');go(location.hash.replace('#','')||'plan')
+}
+}
+function addTask(name,pts){
+S.customTasks.push({id:'ct_'+Date.now(),name,pts:pts||1,done:false});
+save();go('plan')
+}
+function delTask(id){
+S.customTasks=S.customTasks.filter(t=>t.id!==id);save();go('plan')
+}
+function ckCustom(id){
+const t=S.customTasks.find(x=>x.id===id);if(!t)return;
+if(t.done){
+// 撤回自定义打卡
+t.done=false;S.pts-=t.pts;
+const d=today();if(S.records[d]){S.records[d].cks--;S.records[d].pts-=t.pts;if(S.records[d].cks<=0)delete S.records[d]}
+save();updUI();toast(`已撤回打卡，-${t.pts}积分`,'no');go('plan')
+}else{
+// 打卡
+t.done=true;S.pts+=t.pts;
+const d=today();if(!S.records[d])S.records[d]={cks:0,pts:0};
+S.records[d].cks++;S.records[d].pts+=t.pts;
+save();updUI();toast(`打卡成功！+${t.pts}积分`,'ok');go('plan')
+}
+}
+
+/* 古诗背诵 */
+function masterPoem(id){
+if(S.poems[id]&&S.poems[id].m)return;
+if(!S.poems[id])S.poems[id]={m:false,a:0};
+S.poems[id].m=true;S.poems[id].a++;
+ck('cn_poem',1) // 只加1积分，主积分在打卡里
+}
+
+/* 数学 */
+function mathAns(lessonId,qIdx,correct){
+if(S.mathQuizDone[lessonId+'_'+qIdx])return;
+S.mathQuizDone[lessonId+'_'+qIdx]=true;
+if(!correct){
+// 入错题本
+S.mathErrBook.push({id:'me_'+Date.now(),lessonId,q:genMathQuiz(lessonId)[qIdx].q,correctAns:genMathQuiz(lessonId)[qIdx].opts[genMathQuiz(lessonId)[qIdx].ans],date:today()});
+save();toast('答错了，已加入错题本','no');return;
+}
+save();toast('答对了！','ok')
+}
+function mathErrCorrect(id){
+S.mathErrBook=S.mathErrBook.filter(e=>e.id!==id);
+save();toast('错题已清除！','ok');go('math')
+}
+
+/* 英语 */
+function engWordDone(unitId,wordIdx){
+const key=unitId+'_'+wordIdx;
+if(S.engWordDone[key])return;
+S.engWordDone[key]=true;save()
+}
+function engWordErr(word,unitId){
+S.engErrBook.push({id:'ee_'+Date.now(),word,unitId,date:today()});
+save();toast('已加入英语错题本','no')
+}
+function engErrCorrect(id){
+S.engErrBook=S.engErrBook.filter(e=>e.id!==id);
+save();toast('错题已清除！','ok');go('eng')
+}
+
+/* 宠物 */
+/* 宠物动画映射：每种动作对应不同的emoji、动画类名和语音 */
+const PET_ANIMS={
+feed:{emoji:'🤤',anim:'pet-bounce',speech:'嗷呜~好吃的！再来一点嘛~'},
+water:{emoji:'😋',anim:'pet-wiggle',speech:'咕噜咕噜~水真清凉！'},
+walk:{emoji:'🏃',anim:'pet-run',speech:'汪汪！出去溜溜真开心！外面的世界好大呀~'},
+play:{emoji:'😆',anim:'pet-jump',speech:'耶！玩球球！接住啦~汪汪汪！'},
+bath:{emoji:'🛁',anim:'pet-shake',speech:'哗啦啦~洗得真干净！香喷喷的奶牛~'},
+sleep:{emoji:'😴',anim:'pet-sleep',speech:'呼噜呼噜~好困呀，让我打个盹儿~zzZ'}
+};
+function petAction(action){
+const p=S.pet;let cost=0;
+const animData=PET_ANIMS[action];
+switch(action){
+case'feed':p.full=Math.min(100,p.full+20);p.hp=Math.min(100,p.hp+5);cost=5;break;
+case'water':p.full=Math.min(100,p.full+10);p.hp=Math.min(100,p.hp+5);cost=3;break;
+case'walk':p.happy=Math.min(100,p.happy+20);p.hp=Math.min(100,p.hp+5);cost=2;break;
+case'play':p.happy=Math.min(100,p.happy+15);cost=3;break;
+case'bath':p.clean=Math.min(100,p.clean+30);p.happy=Math.min(100,p.happy+5);cost=6;break;
+case'sleep':p.hp=Math.min(100,p.hp+20);p.happy=Math.min(100,p.happy+10);p.full=Math.min(100,p.full+5);cost=1;break;
+}
+/* 检查积分是否足够 */
+if(S.pts<cost){toast('积分不足哦，先去完成打卡任务吧！','no');return}
+if(cost>0)S.pts-=cost;
+/* 设置宠物动画状态 */
+S.petAnim=animData.anim;
+S.petSpeech=animData.speech;
+S.petAnimEmoji=animData.emoji;
+S.petAnimTime=Date.now();
+save();updUI();
+if(cost>0)toast(`花费${cost}☀积分，${p.name}很开心！`,'ok');
+else toast(`${p.name}很开心！`,'ok');
+go('pet');
+/* 3秒后自动清除动画，恢复原样 */
+setTimeout(()=>{
+S.petAnim='';S.petSpeech='';S.petAnimEmoji='';
+save();go('pet');
+},3000)
+}
+function buyShop(id){
+const it=SHOP.find(x=>x.id===id);
+if(S.petOwned.includes(id)){toast('已拥有','no');return}
+if(S.pts<it.p){toast('积分不足','no');return}
+S.pts-=it.p;S.petOwned.push(id);save();updUI();toast(`购买${it.n}成功！`,'ok');go('shop')
+}
+
+/* ===== 渲染 ===== */
+function render(p){
+const R={plan:pgPlan,cn:pgCn,math:pgMath,eng:pgEng,sport:pgSport,game:pgGame,pet:pgPet,shop:pgShop};
+return R[p]?`<div class="page on">${R[p]()}</div>`:'<p>建设中</p>'
+}
+
+/* 1. 今日计划 */
+function pgPlan(){
+const doneCks=Object.values(S.ck).filter(Boolean).length;
+const totalCks=Object.keys(S.ck).length;
+const customDone=S.customTasks.filter(t=>t.done).length;
+const allDone=doneCks+customDone;
+const allTotal=totalCks+S.customTasks.length;
+const pct=Math.round(allDone/allTotal*100)||0;
+let cks=Object.entries(S.ck).map(([k,v])=>{
+const labels={cn_poem:'背诵古诗',cn_read:'阅读30分钟',cn_write:'练字一页',cn_reading:'阅读理解一篇',cn_copy:'摘抄习作例文',
+math_calc:'数学计算一页',math_err:'数学错题复习',math_preview:'数学课时预习',
+eng_word:'英语单词默写',eng_trace:'单词描红一页',eng_read:'英语朗读',
+sport:'跳绳150个'};
+const ptsMap={cn_poem:1,cn_read:2,cn_write:1,cn_reading:2,cn_copy:2,math_calc:1,math_err:2,math_preview:3,eng_word:1,eng_trace:1,eng_read:1,sport:2};
+return{key:k,label:labels[k]||k,pts:ptsMap[k]||1,done:v}
+}).filter(x=>x.label);
+// 自定义任务
+let custom=S.customTasks.map(t=>({...t}));
+const d=new Date();
+return`
+<div class="wban"><div><h2>今日暑假计划</h2><p>${d.getMonth()+1}月${d.getDate()}日 · 完成打卡赚积分，养宠物狗</p></div>
+<div class="wpts"><div class="n">☀ ${S.pts}</div><div class="l">积分余额</div></div></div>
+
+<div class="stats">
+<div class="sc sc-pk"><div class="sv">${allDone}/${allTotal}</div><div class="sl">今日打卡</div></div>
+<div class="sc sc-gn"><div class="sv">${S.pet.hp}%</div><div class="sl">宠物健康</div></div>
+<div class="sc sc-sun"><div class="sv">${Object.values(S.records).reduce((s,r)=>s+r.pts,0)}</div><div class="sl">累计积分</div></div>
+<div class="sc sc-lv"><div class="sv">${Object.keys(S.poems).filter(k=>S.poems[k].m).length}</div><div class="sl">已背古诗</div></div>
+</div>
+
+<div class="card">
+<div class="card-t">📋 今日打卡进度</div>
+<div class="flex-between" style="margin-bottom:6px"><span style="font-weight:600;font-size:14px">完成进度</span><span style="color:var(--pink-d);font-weight:700">${pct}%</span></div>
+<div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
+<p style="font-size:13px;color:var(--t2);margin-top:4px">${pct===100?'太棒了！今天全部完成啦！':`还差 ${allTotal-allDone} 项，加油！`}</p>
+</div>
+
+<div class="card">
+<div class="card-t">📝 语文打卡</div>
+${cks.filter(x=>x.key.startsWith('cn')).map(x=>`<div class="ck-item"><div class="ck-box ${x.done?'done':''}" onclick="ck('${x.key}',${x.pts})">${x.done?'✓':''}</div><span class="ck-txt ${x.done?'done':''}">${x.label}</span><span class="ck-pts">+${x.pts}☀</span>${x.done?'<span class="ck-undo" onclick="ck(\''+x.key+'\','+x.pts+')">撤回</span>':''}</div>`).join('')}
+</div>
+
+<div class="card">
+<div class="card-t">🔢 数学打卡</div>
+${cks.filter(x=>x.key.startsWith('math')).map(x=>`<div class="ck-item"><div class="ck-box ${x.done?'done':''}" onclick="ck('${x.key}',${x.pts})">${x.done?'✓':''}</div><span class="ck-txt ${x.done?'done':''}">${x.label}</span><span class="ck-pts">+${x.pts}☀</span>${x.done?'<span class="ck-undo" onclick="ck(\''+x.key+'\','+x.pts+')">撤回</span>':''}</div>`).join('')}
+</div>
+
+<div class="card">
+<div class="card-t">🔤 英语打卡</div>
+${cks.filter(x=>x.key.startsWith('eng')).map(x=>`<div class="ck-item"><div class="ck-box ${x.done?'done':''}" onclick="ck('${x.key}',${x.pts})">${x.done?'✓':''}</div><span class="ck-txt ${x.done?'done':''}">${x.label}</span><span class="ck-pts">+${x.pts}☀</span>${x.done?'<span class="ck-undo" onclick="ck(\''+x.key+'\','+x.pts+')">撤回</span>':''}</div>`).join('')}
+</div>
+
+<div class="card">
+<div class="card-t">🏃 运动</div>
+${cks.filter(x=>x.key==='sport').map(x=>`<div class="ck-item"><div class="ck-box ${x.done?'done':''}" onclick="ck('${x.key}',${x.pts})">${x.done?'✓':''}</div><span class="ck-txt ${x.done?'done':''}">${x.label}</span><span class="ck-pts">+${x.pts}☀</span>${x.done?'<span class="ck-undo" onclick="ck(\''+x.key+'\','+x.pts+')">撤回</span>':''}</div>`).join('')}
+</div>
+
+<div class="card">
+<div class="card-t">✏️ 自定义任务</div>
+${custom.map(x=>`<div class="ck-item"><div class="ck-box ${x.done?'done':''}" onclick="ckCustom('${x.id}')">${x.done?'✓':''}</div><span class="ck-txt ${x.done?'done':''}">${x.name}</span><span class="ck-pts">+${x.pts}☀</span>${x.done?'<span class="ck-undo" onclick="ckCustom(\''+x.id+'\')">撤回</span>':''}<span class="ck-del" onclick="delTask('${x.id}')">删除</span></div>`).join('')}
+<div class="add-task">
+<input class="at-input" id="atName" placeholder="添加新任务...">
+<input class="at-pts" id="atPts" placeholder="积分" value="1">
+<button class="at-btn" onclick="addTask(document.getElementById('atName').value,parseInt(document.getElementById('atPts').value)||1)">添加</button>
+</div>
+</div>
+
+${!window.matchMedia('(display-mode:standalone)').matches?`
+<div class="card" style="background:linear-gradient(135deg,var(--pink-l),var(--lav-l));border:2px solid var(--pink)">
+<div class="card-t">📱 添加到主屏幕</div>
+<div style="font-size:13px;line-height:1.6;color:var(--t1)">
+<b>像App一样使用学习乐园！</b><br>
+<span style="color:var(--pink-d)">iPhone/iPad：</span>点击底部分享按钮 → 添加到主屏幕<br>
+<span style="color:var(--pink-d)">安卓：</span>浏览器菜单 → 添加到主屏幕<br>
+添加后可以从桌面直接打开，更方便！
+</div>
+<button class="btk btk-pk" onclick="installPrompt()" style="margin-top:8px;width:100%">一键安装到桌面</button>
+</div>`:''}
+`
+}
+
+/* 2. 语文 */
+function pgCn(){
+let poems=POEMS.map(p=>{
+const ps=S.poems[p.id]||{m:false};
+return{...p,mastered:ps.m}
+});
+const todayPoem=POEMS[S.cnPoemIdx%POEMS.length];
+return`
+<div class="pg-hd"><div class="pg-t">📝 语文学习</div><div class="pg-s">沪教版三上 · 古诗/阅读/练字/摘抄</div></div>
+
+<div class="card" style="background:linear-gradient(135deg,var(--lav-l),var(--lav))">
+<div class="card-t" style="color:#fff">📖 今日古诗：第 ${S.cnPoemIdx+1} 首</div>
+<div style="color:#fff;font-size:14px;margin-bottom:4px"><strong>${todayPoem.t}</strong> · 【${todayPoem.a}】</div>
+<div style="color:var(--lav-l);font-size:13px;margin-bottom:12px">${todayPoem.l.join(' / ')}</div>
+<button class="btk btk-lv" onclick="showPoem('${todayPoem.id}')">开始背诵</button>
+<button class="btk ${S.ck.cn_poem?'btk-gn':'btk-pk'}" onclick="ck('cn_poem',1)">${S.ck.cn_poem?'已打卡 ✓ (点撤回)':'打卡背诵'}</button>
+</div>
+
+<div class="grid2">
+${poems.map(p=>`<div class="poem-c" onclick="showPoem('${p.id}')">
+<span class="tb tb-s3">${p.b}</span>
+<div class="poem-t">${p.t}</div>
+<div class="poem-a">【${p.a}】</div>
+<div class="poem-pr">${p.l[0]}<br>${p.l[1]}<br>...</div>
+<span class="poem-st ${p.mastered?'m':'t'}">${p.mastered?'已掌握':'去背诵'}</span>
+</div>`).join('')}
+</div>
+
+<div class="card">
+<div class="card-t">📚 阅读理解</div>
+<p style="font-size:14px;color:var(--t2)">每天完成一篇阅读理解练习，提高阅读能力。</p>
+<button class="btk ${S.ck.cn_reading?'btk-gn':'btk-pk'}" onclick="ck('cn_reading',2)">${S.ck.cn_reading?'已打卡 ✓ (点撤回)':'打卡阅读理解'}</button>
+</div>
+
+<div class="card">
+<div class="card-t">✏️ 练字</div>
+<p style="font-size:14px;color:var(--t2)">每天练字一页，书写工整美观。</p>
+<button class="btk ${S.ck.cn_write?'btk-gn':'btk-pk'}" onclick="ck('cn_write',1)">${S.ck.cn_write?'已打卡 ✓ (点撤回)':'打卡练字'}</button>
+</div>
+
+<div class="card">
+<div class="card-t">📖 每日阅读30分钟</div>
+<p style="font-size:14px;color:var(--t2)">坚持每天阅读30分钟课外书籍。</p>
+<button class="btk ${S.ck.cn_read?'btk-gn':'btk-pk'}" onclick="ck('cn_read',2)">${S.ck.cn_read?'已打卡 ✓ (点撤回)':'打卡阅读'}</button>
+</div>
+
+<div class="card">
+<div class="card-t">✍️ 摘抄习作例文（每两天一篇）</div>
+<p style="font-size:14px;color:var(--t2)">每两天摘抄一篇好的习作例文，积累写作素材。</p>
+<button class="btk ${S.ck.cn_copy?'btk-gn':'btk-pk'}" onclick="ck('cn_copy',2)">${S.ck.cn_copy?'已打卡 ✓ (点撤回)':'打卡摘抄'}</button>
+</div>`
+}
+
+/* 古诗弹窗 */
+function showPoem(id){
+const p=POEMS.find(x=>x.id===id);
+const ps=S.poems[id]||{m:false};
+let lines=p.l.map(l=>`<div class="poem-line">${l}</div>`).join('');
+let defs=p.def?p.def[0]:{};
+let defHtml=Object.entries(defs).map(([k,v])=>`<span class="def">${k}：${v}</span>`).join(' ');
+// 选词填空背诵
+if(!ps.m){
+const fi=p.fill||0;
+const cc=p.l[fi].replace(/[\(（][^\)）]+[\)）]/g,'')[0];
+const ot=POEMS.filter(x=>x.id!==id).flatMap(x=>x.l.map(l=>l.replace(/[\(（][^\)）]+[\)）]/g,'')[0])).filter(c=>c!==cc);
+const ch=[cc,...ot.sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+document.getElementById('mc').innerHTML=`
+<div class="mt">${p.t}</div>
+<div class="ms">【${p.a}】· 选出正确的字</div>
+${p.l.map((l,i)=>`<div class="poem-line">${i===fi?'<span class="fill-blank">　　</span>'+l.replace(/[\(（][^\)）]+[\)）]/g,'').slice(1):l.replace(/[\(（][^\)）]+[\)）]/g,'')}</div>`).join('')}
+<div style="margin:6px 0;font-size:13px;color:var(--lav-d)">重点释义：${defHtml}</div>
+<div class="choice-row" id="cRow">${ch.map(c=>`<button class="choice-btn" onclick="ansPoem('${id}','${c}','${cc}')">${c}</button>`).join('')}</div>
+<div class="mf"><button class="bse" onclick="clM()">放弃</button></div>`;
+}else{
+document.getElementById('mc').innerHTML=`
+<div class="mt">${p.t}</div>
+<div class="ms">【${p.a}】· 已掌握 ✓</div>
+${lines}
+<div style="margin:6px 0;font-size:13px;color:var(--lav-d)">重点释义：${defHtml}</div>
+<div class="mf"><button class="bpr" onclick="clM()">关闭</button></div>`;
+}
+document.getElementById('mm').classList.add('show')
+}
+function ansPoem(id,c,cc){
+document.querySelectorAll('#cRow .choice-btn').forEach(b=>{if(b.textContent===c)b.classList.add(c===cc?'ok':'no');b.disabled=true});
+if(c===cc){setTimeout(()=>{masterPoem(id);S.cnPoemIdx++;clM();go('cn')},600)}
+else{setTimeout(()=>{toast('再想想！','no');setTimeout(()=>showPoem(id),800)},600)}
+}
+
+/* 3. 数学 */
+function pgMath(){
+// 计算当前应学习的课时
+let curLesson=null;
+for(const course of MATH_COURSE){
+for(const sub of course.sub){
+if(!S.mathQuizDone[sub.id+'_all']){curLesson={course,sub};break}
+}
+if(curLesson)break;
+}
+let lessonHtml='';
+if(curLesson){
+const quiz=genMathQuiz(curLesson.sub.id);
+const learnContent=curLesson.sub.learn||'<p style="color:var(--t3)">预习内容加载中...</p>';
+lessonHtml=`<div class="card" style="border:2px solid var(--pink-d)">
+<div class="card-t">🎯 当前预习：${curLesson.course.t} - ${curLesson.sub.t}</div>
+<div class="ml-sub">💡 ${curLesson.sub.tip}</div>
+<div class="learn-box" onclick="this.querySelector('.learn-content').classList.toggle('open')">
+<div class="learn-header">📖 点击展开预习内容（15分钟）</div>
+<div class="learn-content">${learnContent}</div>
+</div>
+<div class="ml-quiz"><div class="ml-q">同步练习题（5题）</div>
+${quiz.map((q,i)=>`<div style="margin:8px 0"><div class="ml-q">${i+1}. ${q.q}</div><div class="ml-opts">${q.opts.map((o,j)=>`<span class="ml-opt" onclick="mathAns('${curLesson.sub.id}',${i},${j===q.ans})" data-i="${i}" data-j="${j}">${o}</span>`).join('')}</div></div>`).join('')}
+</div>
+<button class="btk ${S.ck.math_preview?'btk-gn':'btk-pk'}" onclick="ck('math_preview',3)">${S.ck.math_preview?'已打卡 ✓ (点撤回)':'打卡预习完成'}</button>
+</div>`
+}
+
+let courseList=MATH_COURSE.map(c=>{
+const subs=c.sub.map(s=>{
+const done=S.mathQuizDone[s.id+'_all'];
+return`<div class="math-lesson ${done?'on':''}"><div class="ml-hd"><div class="ml-t">${s.t}</div></div><div class="ml-sub">${s.tip}</div>${done?'<div style="font-size:12px;color:var(--green-d)">✓ 已完成</div>':''}</div>`
+}).join('');
+return`<div class="card"><div class="card-t"><span class="tb tb-math">沪教版三上</span> ${c.t}</div>${subs}</div>`
+}).join('');
+
+let errHtml=S.mathErrBook.length?S.mathErrBook.map(e=>`<div class="err-item"><div class="err-q">${e.q}</div><div class="err-a">正确答案：${e.correctAns}</div><div class="err-date">${e.date}</div><button class="btk btk-gn" style="margin-top:6px;font-size:12px;padding:4px 10px" onclick="mathErrCorrect('${e.id}')">已掌握，删除</button></div>`).join(''):'<p style="color:var(--t2);text-align:center;padding:16px">暂无错题，继续保持！</p>';
+
+return`
+<div class="pg-hd"><div class="pg-t">🔢 数学学习</div><div class="pg-s">沪教版五四制 · 三上新版教材</div></div>
+<div class="card">
+<div class="card-t">📝 每日计算一页</div>
+<p style="font-size:14px;color:var(--t2)">每天完成一页口算/笔算练习。</p>
+<button class="btk ${S.ck.math_calc?'btk-gn':'btk-pk'}" onclick="ck('math_calc',1)">${S.ck.math_calc?'已打卡 ✓ (点撤回)':'打卡计算'}</button>
+</div>
+${lessonHtml}
+<div class="card">
+<div class="card-t">❌ 数学错题本</div>
+${errHtml}
+<button class="btk ${S.ck.math_err?'btk-gn':'btk-or'}" onclick="ck('math_err',2)">${S.ck.math_err?'已打卡 ✓ (点撤回)':'打卡错题复习'}</button>
+</div>
+${courseList}`
+}
+
+/* 4. 英语 */
+function pgEng(){
+let units=ENG_UNITS.map(u=>{
+const words=u.words.map((w,i)=>{
+const done=S.engWordDone[u.id+'_'+i];
+return`<div class="word-item"><span class="word-w">${w}</span><span class="word-st ${done?'done':'todo'}">${done?'✓':''}</span></div>`
+}).join('');
+return`<div class="eng-unit">
+<span class="tb tb-eng">${u.t}</span>
+<div class="card-t">${u.t}</div>
+${words}
+<button class="btk btk-pk" style="margin-top:8px" onclick="engWordTest('${u.id}')">开始默写</button>
+</div>`
+}).join('');
+let errHtml=S.engErrBook.length?S.engErrBook.map(e=>`<div class="err-item"><div class="err-q">单词：${e.word}</div><div class="err-date">${e.date} · ${ENG_UNITS.find(u=>u.id===e.unitId)?.t||''}</div><button class="btk btk-gn" style="margin-top:4px;font-size:12px;padding:4px 10px" onclick="engErrCorrect('${e.id}')">已掌握</button></div>`).join(''):'<p style="color:var(--t2);text-align:center;padding:16px">暂无错题</p>';
+return`
+<div class="pg-hd"><div class="pg-t">🔤 英语学习</div><div class="pg-s">沪教版五四制三上 · Unit1-10</div></div>
+<div class="card">
+<div class="card-t">✍️ 单词描红</div>
+<p style="font-size:14px;color:var(--t2)">每天一页单词描红练习。</p>
+<button class="btk ${S.ck.eng_trace?'btk-gn':'btk-pk'}" onclick="ck('eng_trace',1)">${S.ck.eng_trace?'已打卡 ✓ (点撤回)':'打卡描红'}</button>
+</div>
+<div class="card">
+<div class="card-t">📖 英语朗读</div>
+<p style="font-size:14px;color:var(--t2)">每天朗读英语课本三上内容。</p>
+<button class="btk ${S.ck.eng_read?'btk-gn':'btk-pk'}" onclick="ck('eng_read',1)">${S.ck.eng_read?'已打卡 ✓ (点撤回)':'打卡朗读'}</button>
+</div>
+<div class="card">
+<div class="card-t">❌ 英语错题本</div>
+${errHtml}
+</div>
+${units}`
+}
+
+/* 英语单词测试弹窗 */
+function engWordTest(unitId){
+const u=ENG_UNITS.find(x=>x.id===unitId);
+const word=u.words[Math.floor(Math.random()*u.words.length)];
+document.getElementById('mc').innerHTML=`
+<div class="mt">单词默写测试</div>
+<div class="ms">${u.t}</div>
+<div style="text-align:center;margin:16px 0;font-size:20px;font-weight:800;color:var(--pink-d)">${word}</div>
+<div style="text-align:center;margin:8px 0;font-size:14px;color:var(--t2)">请写出这个单词的中文意思</div>
+<div class="mf"><button class="bpr" onclick="engWordOK('${unitId}','${word}')">记住了</button><button class="bse" onclick="engWordNO('${unitId}','${word}')">不记得</button></div>`;
+document.getElementById('mm').classList.add('show')
+}
+function engWordOK(unitId,word){
+const idx=ENG_UNITS.find(u=>u.id===unitId).words.indexOf(word);
+engWordDone(unitId,idx);clM();toast('太棒了！','ok');go('eng')
+}
+function engWordNO(unitId,word){
+engWordErr(word,unitId);clM();toast('已加入错题本','no');go('eng')
+}
+
+/* 5. 运动 */
+function pgSport(){
+return`
+<div class="pg-hd"><div class="pg-t">🏃 运动打卡</div><div class="pg-s">每天跳绳150个，强身健体</div></div>
+<div class="card" style="text-align:center;padding:30px">
+<div style="font-size:60px;margin-bottom:10px">🤸</div>
+<div style="font-size:20px;font-weight:800;color:var(--pink-d)">跳绳 150 个</div>
+<div style="font-size:14px;color:var(--t2);margin:10px 0">坚持运动，身体棒棒！</div>
+<div class="pbar" style="margin:10px auto;max-width:300px"><div class="pfill" style="width:${S.ck.sport?100:0}%"></div></div>
+<button class="btk ${S.ck.sport?'btk-gn':'btk-pk'}" style="font-size:16px;padding:12px 30px" onclick="ck('sport',2)">${S.ck.sport?'已打卡 ✓ (点撤回)':'打卡跳绳'}</button>
+</div>`
+}
+
+/* 6. 小游戏 */
+let gameData={type:'',score:0,qIdx:0,data:[]};
+function pgGame(){
+return`
+<div class="pg-hd"><div class="pg-t">🎮 小游戏</div><div class="pg-s">蛋仔派对风格 · 玩中学</div></div>
+<div class="grid2">
+<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('poem')">
+<div style="font-size:40px">📜</div>
+<div style="font-size:16px;font-weight:700;color:var(--pink-d)">古诗闯关</div>
+<div style="font-size:13px;color:var(--t2)">背诵古诗趣味闯关</div>
+</div>
+<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('math')">
+<div style="font-size:40px">🧮</div>
+<div style="font-size:16px;font-weight:700;color:var(--pink-d)">数学思维</div>
+<div style="font-size:13px;color:var(--t2)">速算挑战适合二升三</div>
+</div>
+<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('eng')">
+<div style="font-size:40px">🔤</div>
+<div style="font-size:16px;font-weight:700;color:var(--pink-d)">单词大冒险</div>
+<div style="font-size:13px;color:var(--t2)">玩学练模式 · 蛋仔派对</div>
+</div>
+<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('calc')">
+<div style="font-size:40px">⚡</div>
+<div style="font-size:16px;font-weight:700;color:var(--pink-d)">速算冲刺</div>
+<div style="font-size:13px;color:var(--t2)">限时计算挑战</div>
+</div>
+</div>`
+}
+
+function startGame(type){
+gameData={type,score:0,qIdx:0,data:[]};
+if(type==='poem'){
+gameData.data=POEMS.map(p=>({q:`${p.t} 的作者是？`,opts:[p.a,...POEMS.filter(x=>x.a!==p.a).map(x=>x.a).sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5),ans:p.a}));
+}else if(type==='math'){
+gameData.data=[
+{q:'3×7=?',opts:['21','10','24'],ans:'21'},
+{q:'48÷6=?',opts:['8','6','12'],ans:'8'},
+{q:'100-37=?',opts:['63','67','73'],ans:'63'},
+{q:'5×9=?',opts:['45','35','54'],ans:'45'},
+{q:'72÷8=?',opts:['9','8','7'],ans:'9'},
+{q:'6×8=?',opts:['48','42','56'],ans:'48'},
+{q:'56+29=?',opts:['85','75','95'],ans:'85'},
+{q:'36÷4=?',opts:['9','8','6'],ans:'9'}
+];
+}else if(type==='eng'){
+const allWords=ENG_UNITS.flatMap(u=>u.words.map(w=>({word:w,unit:u.t})));
+gameData.data=allWords.sort(()=>Math.random()-.5).slice(0,8).map(w=>{
+const others=allWords.filter(x=>x.word!==w.word).sort(()=>Math.random()-.5).slice(0,2);
+return{q:`"${w.word}" 的中文意思是？`,opts:[w.unit,...others.map(x=>x.unit)].sort(()=>Math.random()-.5),ans:w.unit,word:w.word};
+});
+}else if(type==='calc'){
+for(let i=0;i<10;i++){
+const a=Math.floor(Math.random()*90)+10,b=Math.floor(Math.random()*9)+1;
+const op=Math.random()>.5?'+':'-';
+const ans=op==='+'?a+b:a-b;
+gameData.data.push({q:`${a} ${op} ${b} = ?`,opts:[ans.toString(),(ans+Math.floor(Math.random()*10)-5).toString(),(ans+Math.floor(Math.random()*8)+1).toString()].sort(()=>Math.random()-.5),ans:ans.toString()});
+}
+}
+showGameQ()
+}
+
+function showGameQ(){
+if(gameData.qIdx>=gameData.data.length){endGame();return}
+const q=gameData.data[gameData.qIdx];
+document.getElementById('mc').innerHTML=`
+<div class="game-title">🎮 ${gameData.type==='poem'?'古诗闯关':gameData.type==='math'?'数学思维':gameData.type==='eng'?'单词大冒险':'速算冲刺'}</div>
+<div style="text-align:center;font-size:14px;color:var(--t2)">第 ${gameData.qIdx+1} / ${gameData.data.length} 题 · 得分：${gameData.score}</div>
+<div class="game-q">${q.q}</div>
+<div class="game-opts">${q.opts.map(o=>`<button class="game-opt" onclick="gameAns('${o}','${q.ans}',${q.word?'true':'false'},'${q.word||''}')">${o}</button>`).join('')}</div>`;
+document.getElementById('mm').classList.add('show')
+}
+function gameAns(sel,ans,isEng,word){
+const ok=sel===ans;
+if(ok)gameData.score+=10;
+// 英语错题入错题本
+if(isEng==='true'&&word&&!ok){
+const unit=ENG_UNITS.find(u=>u.words.includes(word));
+if(unit)engWordErr(word,unit.id);
+}
+document.querySelectorAll('.game-opt').forEach(b=>{b.classList.add(b.textContent===ans?'ok':'no');b.disabled=true});
+setTimeout(()=>{gameData.qIdx++;clM();setTimeout(showGameQ,200)},600)
+}
+function endGame(){
+document.getElementById('mc').innerHTML=`
+<div class="game-title">🎉 游戏结束</div>
+<div style="text-align:center;font-size:28px;font-weight:800;color:var(--pink-d);margin:20px 0">得分：${gameData.score}</div>
+<div style="text-align:center;font-size:14px;color:var(--t2)">${gameData.score>=60?'太棒了！获得2积分！':'继续加油！获得1积分！'}</div>
+<div class="mf"><button class="bpr" onclick="S.pts+=${gameData.score>=60?2:1};save();updUI();clM();toast('获得积分！','ok');go('game')">领取积分</button></div>`;
+document.getElementById('mm').classList.add('show')
+}
+
+/* 7. 宠物 */
+function pgPet(){
+const p=S.pet;
+const isAnim=S.petAnim&&S.petAnimEmoji;
+const showEmoji=isAnim?S.petAnimEmoji:p.emoji;
+const animClass=isAnim?S.petAnim:'';
+const speechText=S.petSpeech||'';
+const speechBubble=speechText?`<div class="pet-bubble">${speechText}</div>`:'';
+return`
+<div class="pg-hd"><div class="pg-t">🐾 我的宠物狗</div><div class="pg-s">完成打卡赚积分，照顾你的小狗</div></div>
+<div class="pet-area">
+<div class="pet-bubble-wrap">${speechBubble}</div>
+<div class="pet-big ${animClass}">${showEmoji}</div>
+<div style="font-size:18px;font-weight:800;color:var(--pink-d);margin:6px 0">${p.name}</div>
+<div class="pet-stats">
+<div class="ps-item"><div class="ps-l">❤ 健康</div><div class="ps-v" style="color:var(--pink-d)">${p.hp}%</div><div class="ps-bar"><div class="ps-fill hp" style="width:${p.hp}%"></div></div></div>
+<div class="ps-item"><div class="ps-l">🍖 饱食</div><div class="ps-v" style="color:var(--sun-d)">${p.full}%</div><div class="ps-bar"><div class="ps-fill full" style="width:${p.full}%"></div></div></div>
+<div class="ps-item"><div class="ps-l">😊 开心</div><div class="ps-v" style="color:var(--green-d)">${p.happy}%</div><div class="ps-bar"><div class="ps-fill happy" style="width:${p.happy}%"></div></div></div>
+<div class="ps-item"><div class="ps-l">🧼 清洁</div><div class="ps-v" style="color:var(--blue-c)">${p.clean}%</div><div class="ps-bar"><div class="ps-fill clean" style="width:${p.clean}%"></div></div></div>
+</div>
+<div class="pet-actions">
+<button class="pa-btn gn" onclick="petAction('walk')">🚶 遛狗 (2☀)</button>
+<button class="pa-btn pk" onclick="petAction('feed')">🥩 喂食 (5☀)</button>
+<button class="pa-btn sun" onclick="petAction('water')">💧 喝水 (3☀)</button>
+<button class="pa-btn lv" onclick="petAction('play')">🧸 玩耍 (3☀)</button>
+<button class="pa-btn bl" onclick="petAction('bath')">🛁 洗澡 (6☀)</button>
+<button class="pa-btn or" onclick="petAction('sleep')">💤 睡觉 (1☀)</button>
+</div>
+</div>`
+}
+
+/* 8. 商城 */
+function pgShop(){
+let items=SHOP.map(it=>{
+const owned=S.petOwned.includes(it.id);
+return`<div class="shop-item"><div class="shop-emoji">${it.e}</div><div class="shop-n">${it.n}</div><div class="shop-d">${it.d}</div><div class="shop-p">☀ ${it.p}</div><button class="btk ${owned?'btk-gn':S.pts>=it.p?'btk-pk':'btk-gy'}" ${owned||S.pts<it.p?'disabled':''} onclick="buyShop('${it.id}')">${owned?'已拥有':S.pts>=it.p?'购买':'积分不足'}</button></div>`
+}).join('');
+return`
+<div class="pg-hd"><div class="pg-t">🛒 积分商城</div><div class="pg-s">用积分兑换宠物用品</div></div>
+<div class="card" style="background:linear-gradient(135deg,var(--sun),var(--sun-d));color:#7a5a00">
+<div style="display:flex;align-items:center;gap:10px"><span style="font-size:40px">☀</span><div><div style="font-weight:800;font-size:20px">${S.pts}</div><div style="font-size:13px;opacity:.8">当前积分余额</div></div></div>
+</div>
+<div class="grid3">${items}</div>`
+}
+
+/* ===== 未完成提醒 ===== */
+/* PWA安装提示 */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e});
+function installPrompt(){
+if(deferredPrompt){
+deferredPrompt.prompt();
+deferredPrompt.userChoice.then(ch=>{deferredPrompt=null;if(ch.outcome==='accepted')toast('安装成功！从桌面打开即可使用','ok')});
+}else{
+toast('请用浏览器菜单 → 添加到主屏幕','ok');
+}
+}
+
+const REMIND_HOURS=[11,16,20]; // 上午11点、下午4点、晚上8点
+const REMIND_KEY='remindedTimes';
+
+/* 获取未完成打卡列表 */
+function getUndoneItems(){
+const labels={cn_poem:'背诵古诗',cn_read:'阅读30分钟',cn_write:'练字一页',cn_reading:'阅读理解一篇',cn_copy:'摘抄习作例文',
+math_calc:'数学计算一页',math_err:'数学错题复习',math_preview:'数学课时预习',
+eng_word:'英语单词默写',eng_trace:'单词描红一页',eng_read:'英语朗读',
+sport:'跳绳150个'};
+const undone=Object.entries(S.ck).filter(([k,v])=>!v&&labels[k]).map(([k])=>labels[k]);
+const undoneCustom=S.customTasks.filter(t=>!t.done).map(t=>t.name);
+return [...undone,...undoneCustom];
+}
+
+/* 发送提醒 */
+function sendRemind(hour){
+const todayKey=REMIND_KEY+'_'+today()+'_'+hour;
+const already=localStorage.getItem(todayKey);
+if(already)return; // 今天该时段已提醒过
+const undone=getUndoneItems();
+if(undone.length===0)return; // 全完成了不需要提醒
+localStorage.setItem(todayKey,'1');
+const timeLabel=hour===11?'上午':hour===16?'下午':'晚上';
+const title=`⏰ ${timeLabel}提醒 · 宠物奶牛学习乐园`;
+const body=`你还有 ${undone.length} 项任务未完成：${undone.slice(0,5).join('、')}${undone.length>5?'等...':''}`;
+
+/* 优先使用浏览器通知 */
+if('Notification' in window && Notification.permission==='granted'){
+try{new Notification(title,{body,icon:'icon-192.png',tag:todayKey})}catch(e){}
+}else{
+/* 不支持通知时用页面内弹窗提醒 */
+showRemindPopup(title,body);
+}
+}
+
+/* 页面内弹窗提醒（不支持Notification时使用） */
+function showRemindPopup(title,body){
+let popup=document.getElementById('remind-popup');
+if(!popup){
+popup=document.createElement('div');
+popup.id='remind-popup';
+popup.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:999;background:linear-gradient(135deg,var(--pink),var(--lav));color:#fff;padding:16px 24px;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.2);max-width:400px;text-align:center;font-size:14px;font-weight:600;animation:remindSlide .4s ease';
+document.body.appendChild(popup);
+}
+popup.innerHTML=`<div style="font-size:16px;font-weight:800;margin-bottom:6px">${title}</div><div style="font-size:13px;line-height:1.5">${body}</div><div style="margin-top:10px"><button onclick="this.parentElement.parentElement.remove();go('plan')" style="background:#fff;color:var(--pink-d);padding:8px 20px;border-radius:12px;font-weight:700;border:none;cursor:pointer">立即去打卡</button> <button onclick="this.parentElement.parentElement.remove()" style="background:rgba(255,255,255,.3);color:#fff;padding:8px 20px;border-radius:12px;font-weight:600;border:none;cursor:pointer">稍后再说</button></div>`;
+/* 15秒后自动消失 */
+setTimeout(()=>{if(popup.parentElement)popup.remove()},15000);
+}
+
+/* 每分钟检查是否需要提醒 */
+function checkRemind(){
+const now=new Date();
+const h=now.getHours();
+const m=now.getMinutes();
+/* 在目标小时的第0-2分钟内触发提醒（给一点容错） */
+if(m<=2 && REMIND_HOURS.includes(h)){
+sendRemind(h);
+}
+}
+
+/* 请求通知权限 */
+function askNotifyPermission(){
+if('Notification' in window && Notification.permission==='default'){
+Notification.requestPermission();
+}
+}
+
+/* ===== 启动 ===== */
+window.addEventListener('DOMContentLoaded',()=>{
+load();
+const h=location.hash.replace('#','')||'plan';
+go(['plan','cn','math','eng','sport','game','pet','shop'].includes(h)?h:'plan');
+/* 启动提醒系统 */
+askNotifyPermission();
+checkRemind();
+setInterval(checkRemind,60000);
+/* 注册Service Worker */
+if('serviceWorker' in navigator){
+navigator.serviceWorker.register('./sw.js').then(reg=>{
+console.log('SW注册成功');
+}).catch(err=>{
+console.log('SW注册失败:',err);
+});
+}
+});
+window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(h)go(h)});
+</script>
+</body>
+</html>
