@@ -899,7 +899,7 @@ return`
 <div class="card" style="text-align:center;cursor:pointer" onclick="startGame('math')">
 <div style="font-size:40px">🧮</div>
 <div style="font-size:16px;font-weight:700;color:var(--pink-d)">数学思维</div>
-<div style="font-size:13px;color:var(--t2)">速算挑战适合二升三</div>
+<div style="font-size:13px;color:var(--t2)">乘除法挑战</div>
 </div>
 <div class="card" style="text-align:center;cursor:pointer" onclick="startGame('eng')">
 <div style="font-size:40px">🔤</div>
@@ -909,7 +909,7 @@ return`
 <div class="card" style="text-align:center;cursor:pointer" onclick="startGame('calc')">
 <div style="font-size:40px">⚡</div>
 <div style="font-size:16px;font-weight:700;color:var(--pink-d)">速算冲刺</div>
-<div style="font-size:13px;color:var(--t2)">限时计算挑战</div>
+<div style="font-size:13px;color:var(--t2)">乘除法限时挑战</div>
 </div>
 </div>`
 }
@@ -920,14 +920,16 @@ if(type==='poem'){
 gameData.data=POEMS.map(p=>({q:`${p.t} 的作者是？`,opts:[p.a,...POEMS.filter(x=>x.a!==p.a).map(x=>x.a).sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5),ans:p.a}));
 }else if(type==='math'){
 gameData.data=[
-{q:'3×7=?',opts:['21','10','24'],ans:'21'},
-{q:'48÷6=?',opts:['8','6','12'],ans:'8'},
-{q:'100-37=?',opts:['63','67','73'],ans:'63'},
+{q:'3×7=?',opts:['21','14','24'],ans:'21'},
+{q:'48÷6=?',opts:['8','6','9'],ans:'8'},
 {q:'5×9=?',opts:['45','35','54'],ans:'45'},
-{q:'72÷8=?',opts:['9','8','7'],ans:'9'},
+{q:'72÷8=?',opts:['9','8','6'],ans:'9'},
 {q:'6×8=?',opts:['48','42','56'],ans:'48'},
-{q:'56+29=?',opts:['85','75','95'],ans:'85'},
-{q:'36÷4=?',opts:['9','8','6'],ans:'9'}
+{q:'36÷4=?',opts:['9','8','6'],ans:'9'},
+{q:'7×8=?',opts:['56','49','63'],ans:'56'},
+{q:'81÷9=?',opts:['9','8','7'],ans:'9'},
+{q:'4×6=?',opts:['24','18','28'],ans:'24'},
+{q:'63÷7=?',opts:['9','8','7'],ans:'9'}
 ];
 }else if(type==='eng'){
 const allWords=ENG_UNITS.flatMap(u=>u.words.map(w=>({word:w.w,cn:w.cn})));
@@ -937,10 +939,29 @@ return{q:`"${w.word}" 的中文意思是？`,opts:[w.cn,...others.map(x=>x.cn)].
 });
 }else if(type==='calc'){
 for(let i=0;i<10;i++){
-const a=Math.floor(Math.random()*90)+10,b=Math.floor(Math.random()*9)+1;
-const op=Math.random()>.5?'+':'-';
-const ans=op==='+'?a+b:a-b;
-gameData.data.push({q:`${a} ${op} ${b} = ?`,opts:[ans.toString(),(ans+Math.floor(Math.random()*10)-5).toString(),(ans+Math.floor(Math.random()*8)+1).toString()].sort(()=>Math.random()-.5),ans:ans.toString()});
+const isMul=Math.random()>.5;
+let a,b,ans,q;
+if(isMul){
+/* 乘法：一位数 × 一位数 或 一位数 × 两位数 */
+b=Math.floor(Math.random()*9)+1;
+if(Math.random()>.5){
+a=Math.floor(Math.random()*9)+1;
+}else{
+a=Math.floor(Math.random()*90)+10;
+}
+ans=a*b;
+q=`${a} × ${b} = ?`;
+}else{
+/* 除法：整除，结果为一位数 */
+b=Math.floor(Math.random()*9)+2;
+ans=Math.floor(Math.random()*9)+1;
+a=b*ans;
+q=`${a} ÷ ${b} = ?`;
+}
+/* 生成两个干扰项 */
+const wrong1=ans+Math.floor(Math.random()*4)+1;
+const wrong2=Math.max(1,ans-Math.floor(Math.random()*4)-1);
+gameData.data.push({q,opts:[ans.toString(),wrong1.toString(),wrong2.toString()].sort(()=>Math.random()-.5),ans:ans.toString()});
 }
 }
 showGameQ()
