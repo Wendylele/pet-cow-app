@@ -178,6 +178,46 @@ a{color:inherit;text-decoration:none}
 .kb-key:active{transform:scale(.92)}
 .kb-space{width:80px;font-size:13px}
 .game-score{font-size:16px;font-weight:700;color:var(--pink-d);margin:10px 0}
+/* 通关式游戏 */
+.level-map{display:flex;flex-direction:column;gap:16px}
+.level-row{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
+.level-row-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.level-icon{font-size:32px}
+.level-info{flex:1}
+.level-name{font-size:16px;font-weight:700;color:var(--pink-d)}
+.level-progress{font-size:12px;color:var(--t2)}
+.level-stars-summary{font-size:13px;color:var(--orange,#FF9F43);letter-spacing:1px}
+.level-nodes{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.level-node{width:54px;height:62px;border-radius:var(--rs);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;position:relative;border:2px solid}
+.level-node.available{background:var(--pink-l);color:var(--pink-d);border-color:var(--pink)}
+.level-node.available:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(255,143,171,.35)}
+.level-node.completed{background:#E8F8EA;color:var(--green-d);border-color:var(--green)}
+.level-node.completed:hover{transform:translateY(-3px);box-shadow:0 6px 14px rgba(107,203,119,.3)}
+.level-node.locked{background:#f0f0f0;color:#ccc;border-color:#ddd;border-style:dashed;cursor:not-allowed}
+.level-node .ln-num{font-size:18px;font-weight:800}
+.level-node .ln-stars{font-size:10px;margin-top:2px;line-height:1}
+.level-node .ln-name{font-size:9px;margin-top:1px;text-align:center;padding:0 2px;line-height:1.1}
+.challenge-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:14px;font-size:13px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#FF9F43,#FF6B6B);color:#fff;margin-top:10px;transition:all .15s;border:none}
+.challenge-btn:hover{transform:scale(1.04)}
+.challenge-btn.locked{background:#D5CBE8;color:#999;cursor:not-allowed}
+.game-hud{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:var(--bg2);border-radius:var(--rs);margin-bottom:10px;font-size:13px;font-weight:600}
+.game-hud .hud-hearts{color:var(--pink-d);font-size:18px;letter-spacing:3px}
+.game-hud .hud-progress{color:var(--t2)}
+.game-hud .hud-score{color:var(--green-d)}
+.result-card{text-align:center;padding:6px}
+.result-stars{font-size:44px;margin:14px 0;letter-spacing:6px;animation:pop .3s ease}
+.result-score{font-size:28px;font-weight:800;color:var(--pink-d)}
+.result-pct{font-size:15px;color:var(--t2);margin:4px 0}
+.result-pts{font-size:14px;color:#C88A00;margin:8px 0;font-weight:700}
+.result-actions{display:flex;gap:10px;margin-top:16px}
+.btn-retry{flex:1;padding:10px;border-radius:12px;background:#FF9F43;color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer}
+.btn-next{flex:1;padding:10px;border-radius:12px;background:var(--green);color:#fff;font-size:14px;font-weight:600;border:none;cursor:pointer}
+.btn-back{flex:1;padding:10px;border-radius:12px;background:var(--bg2);color:var(--t2);font-size:14px;border:none;cursor:pointer}
+.timer-bar{height:8px;background:var(--bg2);border-radius:4px;margin:8px 0;overflow:hidden}
+.timer-fill{height:100%;background:linear-gradient(90deg,var(--green),#FF9F43,var(--red));border-radius:4px;transition:width 1s linear}
+.timer-text{text-align:center;font-size:16px;font-weight:800;color:var(--t2)}
+.timer-text.urgent{color:var(--red);animation:blink .5s infinite}
+@keyframes blink{50%{opacity:.3}}
 /* 宠物 */
 .pet-area{background:linear-gradient(135deg,#FFF5D6,#FFEFB0);border-radius:var(--r);padding:20px;text-align:center;box-shadow:var(--sh)}
 .pet-big{font-size:80px;margin:10px 0;cursor:pointer;transition:transform .2s}
@@ -295,7 +335,7 @@ body.testing-mode{overflow:hidden}
 <div class="nav-item" data-p="math" onclick="go('math')"><span class="nav-ico">🔢</span><span>数学</span></div>
 <div class="nav-item" data-p="eng" onclick="go('eng')"><span class="nav-ico">🔤</span><span>英语</span></div>
 <div class="nav-item" data-p="sport" onclick="go('sport')"><span class="nav-ico">🏃</span><span>运动</span></div>
-<div class="nav-item" data-p="game" onclick="go('game')"><span class="nav-ico">🎮</span><span>小游戏</span></div>
+<div class="nav-item" data-p="game" onclick="go('game')"><span class="nav-ico">🎮</span><span>学习闯关</span></div>
 <div class="nav-item" data-p="pet" onclick="go('pet')"><span class="nav-ico">🐾</span><span>宠物狗</span></div>
 <div class="nav-item" data-p="shop" onclick="go('shop')"><span class="nav-ico">🛒</span><span>积分商城</span></div>
 </nav>
@@ -449,7 +489,8 @@ pet:{name:'奶牛',emoji:'🐶',hp:80,full:70,happy:60,clean:50},
 petOwned:[],
 petAnim:'',petSpeech:'',petAnimEmoji:'',petAnimTime:0,
 records:{},
-customTasks:[]
+customTasks:[],
+gameProgress:null
 }}
 
 function load(){try{S=JSON.parse(localStorage.getItem(KEY))||defS()}catch(e){S=defS()}
@@ -459,6 +500,9 @@ if(!S.customTasks)S.customTasks=[];if(!S.mathErrBook)S.mathErrBook=[];if(!S.engE
 if(!S.pet)S.pet=defS().pet;if(S.pet.name==='小花')S.pet.name='奶牛';if(!S.petOwned)S.petOwned=[];if(!S.mathQuizDone)S.mathQuizDone={};if(!S.engWordDone)S.engWordDone={};if(!S.petAnim)S.petAnim='';if(!S.petSpeech)S.petSpeech='';if(!S.petAnimEmoji)S.petAnimEmoji='';if(!S.petAnimTime)S.petAnimTime=0;
 // 如果动画状态超过3秒，自动清除过期动画
 if(S.petAnimTime&&Date.now()-S.petAnimTime>3000){S.petAnim='';S.petSpeech='';S.petAnimEmoji='';S.petAnimTime=0}
+// 兼容通关游戏进度
+if(!S.gameProgress)S.gameProgress={poem:{unlocked:1,levels:{}},math:{unlocked:1,levels:{},highScore:0},eng:{unlocked:1,levels:{}}};
+['poem','math','eng'].forEach(t=>{if(!S.gameProgress[t])S.gameProgress[t]={unlocked:1,levels:{}};if(!S.gameProgress[t].unlocked)S.gameProgress[t].unlocked=1;if(!S.gameProgress[t].levels)S.gameProgress[t].levels={};if(t==='math'&&!S.gameProgress[t].highScore)S.gameProgress[t].highScore=0});
 save();updUI()
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
@@ -1094,122 +1138,355 @@ return`
 }
 
 /* 6. 小游戏 */
-let gameData={type:'',score:0,qIdx:0,data:[]};
+let gameData={type:'',levelId:0,score:0,qIdx:0,lives:3,questions:[],maxScore:0,isChallenge:false};
+
+/* ===== 关卡定义 ===== */
+const LEVELS={
+poem:[
+{id:1,name:'初识诗人',desc:'认识前5首诗的作者',icon:'👤',totalQ:6},
+{id:2,name:'广识诗人',desc:'认识后5首诗的作者',icon:'👥',totalQ:8},
+{id:3,name:'诗名配对',desc:'根据诗句猜诗名',icon:'📋',totalQ:8},
+{id:4,name:'诗句填空',desc:'补全古诗中的缺字',icon:'✏️',totalQ:8},
+{id:5,name:'诗意理解',desc:'选择正确的释义',icon:'💡',totalQ:8},
+{id:6,name:'古诗达人',desc:'混合题型大挑战',icon:'🏆',totalQ:10}
+],
+math:[
+{id:1,name:'乘法入门',desc:'整十数×一位数',icon:'🔟',totalQ:8,qtype:'mul10'},
+{id:2,name:'乘法进阶',desc:'整百数×一位数',icon:'💯',totalQ:8,qtype:'mul100'},
+{id:3,name:'乘法挑战',desc:'两位数×一位数',icon:'✖️',totalQ:8,qtype:'mul2'},
+{id:4,name:'乘法大师',desc:'三位数×一位数',icon:'🧮',totalQ:8,qtype:'mul3'},
+{id:5,name:'除法入门',desc:'整十数÷一位数',icon:'➗',totalQ:8,qtype:'div10'},
+{id:6,name:'除法进阶',desc:'整百数÷一位数',icon:'📐',totalQ:8,qtype:'div100'},
+{id:7,name:'除法挑战',desc:'两位数÷一位数',icon:'🔢',totalQ:8,qtype:'div2'},
+{id:8,name:'混合大冒险',desc:'所有题型随机混合',icon:'🎯',totalQ:12,qtype:'mixed'}
+],
+eng:[
+{id:1,name:'初识单词',desc:'看英文选中文U1-3',icon:'📖',totalQ:8},
+{id:2,name:'更多单词',desc:'看英文选中文U4-6',icon:'📚',totalQ:8},
+{id:3,name:'单词积累',desc:'看英文选中文U7-10',icon:'📝',totalQ:8},
+{id:4,name:'反向挑战',desc:'看中文选英文',icon:'🔄',totalQ:8},
+{id:5,name:'拼写入门',desc:'拼写短单词',icon:'⌨️',totalQ:6},
+{id:6,name:'拼写达人',desc:'拼写所有单词',icon:'🏅',totalQ:8}
+]
+};
+
+/* ===== 进度管理 ===== */
+function getGP(type){const gp=S.gameProgress[type];if(!gp.unlocked)gp.unlocked=1;if(!gp.levels)gp.levels={};return gp}
+function isUnlocked(type,lvl){return lvl<=getGP(type).unlocked}
+function unlockNext(type,lvl){const gp=getGP(type);const next=lvl+1;if(LEVELS[type].some(l=>l.id===next)&&gp.unlocked<next){gp.unlocked=next;save()}}
+
+/* ===== 题目生成器 ===== */
+/* 古诗题目 */
+function genPoemQ(lvl){
+const ps=lvl<=2?(lvl===1?POEMS.slice(0,5):POEMS.slice(5)):POEMS;
+if(lvl===1||lvl===2){
+return ps.map(p=>({q:`《${p.t}》的作者是？`,opts:[p.a,...POEMS.filter(x=>x.a!==p.a).map(x=>x.a).sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5),ans:p.a}));
+}
+if(lvl===3){
+return ps.sort(()=>Math.random()-.5).slice(0,8).map(p=>{
+const line=p.l[Math.floor(Math.random()*4)];
+return{q:`"${line}" 出自哪首诗？`,opts:[p.t,...POEMS.filter(x=>x.t!==p.t).map(x=>x.t).sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5),ans:p.t};
+});
+}
+if(lvl===4){
+return ps.sort(()=>Math.random()-.5).slice(0,8).map(p=>{
+const li=Math.floor(Math.random()*4);const line=p.l[li];
+const chars=line.split('');
+const ci=Math.floor(Math.random()*chars.length);
+const ans=chars[ci];const before=line.substring(0,ci);const after=line.substring(ci+1);
+const wrongs=[...new Set(POEMS.flatMap(x=>x.l.join('')))].filter(c=>c!==ans).sort(()=>Math.random()-.5).slice(0,2);
+return{q:`补全诗句：${before}____${after}`,opts:[ans,...wrongs].sort(()=>Math.random()-.5),ans};
+});
+}
+if(lvl===5){
+return ps.sort(()=>Math.random()-.5).slice(0,8).map(p=>{
+const d=p.def[0];const keys=Object.keys(d);
+if(keys.length===0)return null;
+const k=keys[Math.floor(Math.random()*keys.length)];const ans=d[k];
+const wrongs=Object.values(POEMS.flatMap(x=>x.def).flatMap(d=>Object.values(d))).filter(v=>v!==ans).sort(()=>Math.random()-.5).slice(0,2);
+if(wrongs.length<2){wrongs.push('不对','错误')}
+return{q:`"${k}"的意思是？`,opts:[ans,...wrongs].sort(()=>Math.random()-.5),ans};
+}).filter(Boolean);
+}
+/* lvl 6 混合 */
+let mixed=[];
+for(let i=0;i<10;i++){
+const r=Math.floor(Math.random()*4)+1;const q=genPoemQ(r);
+mixed.push(q[Math.floor(Math.random()*q.length)]);
+}
+return mixed;
+}
+
+/* 数学题目 */
+function genMathByType(type){
+const b=Math.floor(Math.random()*9)+2;let a,ans,q;
+if(type==='mul10'){a=(Math.floor(Math.random()*9)+1)*10;ans=a*b;q=a+' × '+b+' = ?'}
+else if(type==='mul100'){a=(Math.floor(Math.random()*9)+1)*100;ans=a*b;q=a+' × '+b+' = ?'}
+else if(type==='mul2'){a=Math.floor(Math.random()*90)+10;ans=a*b;q=a+' × '+b+' = ?'}
+else if(type==='mul3'){a=Math.floor(Math.random()*900)+100;ans=a*b;q=a+' × '+b+' = ?'}
+else if(type==='div10'){a=(Math.floor(Math.random()*9)+1)*10*b;ans=a/b;q=a+' ÷ '+b+' = ?'}
+else if(type==='div100'){a=(Math.floor(Math.random()*9)+1)*100*b;ans=a/b;q=a+' ÷ '+b+' = ?'}
+else if(type==='div2'){a=b*(Math.floor(Math.random()*90)+10);ans=a/b;q=a+' ÷ '+b+' = ?'}
+else{a=b*(Math.floor(Math.random()*900)+100);ans=a/b;q=a+' ÷ '+b+' = ?'}
+const w1=ans+Math.floor(Math.random()*8)+1;const w2=Math.max(0,ans-Math.floor(Math.random()*8)-1);
+return{q,opts:[ans.toString(),w1.toString(),w2.toString()].sort(()=>Math.random()-.5),ans:ans.toString()};
+}
+function genMathQ(lvl){
+const def=LEVELS.math.find(l=>l.id===lvl);const type=def.qtype;
+if(type==='mixed'){
+const types=['mul10','mul100','mul2','mul3','div10','div100','div2','div3'];
+const qs=[];for(let i=0;i<def.totalQ;i++)qs.push(genMathByType(types[Math.floor(Math.random()*types.length)]));return qs;
+}
+const qs=[];for(let i=0;i<def.totalQ;i++)qs.push(genMathByType(type));return qs;
+}
+
+/* 英语题目 */
+function genEngQ(lvl){
+const allWords=ENG_UNITS.flatMap(u=>u.words.map(w=>({word:w.w,cn:w.cn,unitId:u.id})));
+if(lvl===1){const ws=allWords.filter(w=>['u1','u2','u3'].includes(w.unitId)).sort(()=>Math.random()-.5).slice(0,8);
+return ws.map(w=>{const others=allWords.filter(x=>x.cn!==w.cn).sort(()=>Math.random()-.5).slice(0,2);return{q:`"${w.word}" 的中文是？`,opts:[w.cn,...others.map(x=>x.cn)].sort(()=>Math.random()-.5),ans:w.cn,word:w.word,unitId:w.unitId,mode:'choice'}});
+}
+if(lvl===2){const ws=allWords.filter(w=>['u4','u5','u6'].includes(w.unitId)).sort(()=>Math.random()-.5).slice(0,8);
+return ws.map(w=>{const others=allWords.filter(x=>x.cn!==w.cn).sort(()=>Math.random()-.5).slice(0,2);return{q:`"${w.word}" 的中文是？`,opts:[w.cn,...others.map(x=>x.cn)].sort(()=>Math.random()-.5),ans:w.cn,word:w.word,unitId:w.unitId,mode:'choice'}});
+}
+if(lvl===3){const ws=allWords.filter(w=>['u7','u8','u9','u10'].includes(w.unitId)).sort(()=>Math.random()-.5).slice(0,8);
+return ws.map(w=>{const others=allWords.filter(x=>x.cn!==w.cn).sort(()=>Math.random()-.5).slice(0,2);return{q:`"${w.word}" 的中文是？`,opts:[w.cn,...others.map(x=>x.cn)].sort(()=>Math.random()-.5),ans:w.cn,word:w.word,unitId:w.unitId,mode:'choice'}});
+}
+if(lvl===4){const ws=allWords.sort(()=>Math.random()-.5).slice(0,8);
+return ws.map(w=>{const others=allWords.filter(x=>x.word!==w.word).sort(()=>Math.random()-.5).slice(0,2);return{q:`"${w.cn}" 的英文是？`,opts:[w.word,...others.map(x=>x.word)].sort(()=>Math.random()-.5),ans:w.word,word:w.word,unitId:w.unitId,mode:'choice'}});
+}
+/* lvl 5-6 拼写 */
+if(lvl===5){const ws=allWords.filter(w=>w.word.length<=6&&!w.word.includes(' ')).sort(()=>Math.random()-.5).slice(0,6);
+return ws.map(w=>({q:w.cn,ans:w.word,word:w.word,unitId:w.unitId,mode:'fill'}));
+}
+if(lvl===6){const ws=allWords.filter(w=>!w.word.includes(' ')).sort(()=>Math.random()-.5).slice(0,8);
+return ws.map(w=>({q:w.cn,ans:w.word,word:w.word,unitId:w.unitId,mode:'fill'}));
+}
+return[];
+}
+
+/* 统一题目生成入口 */
+function genQuestions(type,lvl){
+if(type==='poem')return genPoemQ(lvl);
+if(type==='math')return genMathQ(lvl);
+if(type==='eng')return genEngQ(lvl);
+return[];
+}
+
+/* ===== 游戏主页：关卡地图 ===== */
 function pgGame(){
+function renderRow(type,icon,name,desc){
+const levels=LEVELS[type];const gp=getGP(type);
+let totalStars=0,completedCount=0;
+levels.forEach(l=>{const lv=gp.levels[l.id];if(lv){totalStars+=lv.stars;if(lv.completed)completedCount++}});
+let nodes=levels.map(l=>{
+const lv=gp.levels[l.id];const unlocked=isUnlocked(type,l.id);
+const stars=lv?lv.stars:0;const starStr='★'.repeat(stars)+'☆'.repeat(3-stars);
+if(!unlocked){return`<div class="level-node locked"><div class="ln-num">🔒</div><div class="ln-name">${l.name}</div></div>`}
+if(lv&&lv.completed){return`<div class="level-node completed" onclick="startLevel('${type}',${l.id})"><div class="ln-num">${l.icon}</div><div class="ln-stars">${starStr}</div><div class="ln-name">${l.name}</div></div>`}
+return`<div class="level-node available" onclick="startLevel('${type}',${l.id})"><div class="ln-num">${l.icon}</div><div class="ln-stars">☆☆☆</div><div class="ln-name">${l.name}</div></div>`
+}).join('');
+let challengeBtn='';
+if(type==='math'){
+const canChallenge=gp.unlocked>=5;
+challengeBtn=`<button class="challenge-btn ${canChallenge?'':'locked'}" onclick="${canChallenge?`startMathChallenge()`:`toast('通关第4关后解锁限时挑战','no')`}">⚡ 限时挑战 ${gp.highScore>0?`· 最高${gp.highScore}分`:''}</button>`;
+}
+return`<div class="level-row">
+<div class="level-row-hd">
+<div class="level-icon">${icon}</div>
+<div class="level-info"><div class="level-name">${name}</div><div class="level-progress">${desc} · 已通关 ${completedCount}/${levels.length} 关</div></div>
+<div class="level-stars-summary">${'★'.repeat(totalStars)}</div>
+</div>
+<div class="level-nodes">${nodes}</div>
+${challengeBtn}
+</div>`
+}
 return`
-<div class="pg-hd"><div class="pg-t">🎮 小游戏</div><div class="pg-s">蛋仔派对风格 · 玩中学</div></div>
-<div class="grid2">
-<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('poem')">
-<div style="font-size:40px">📜</div>
-<div style="font-size:16px;font-weight:700;color:var(--pink-d)">古诗闯关</div>
-<div style="font-size:13px;color:var(--t2)">背诵古诗趣味闯关</div>
-</div>
-<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('math')">
-<div style="font-size:40px">🧮</div>
-<div style="font-size:16px;font-weight:700;color:var(--pink-d)">数学思维</div>
-<div style="font-size:13px;color:var(--t2)">乘除法挑战</div>
-</div>
-<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('eng')">
-<div style="font-size:40px">🔤</div>
-<div style="font-size:16px;font-weight:700;color:var(--pink-d)">单词大冒险</div>
-<div style="font-size:13px;color:var(--t2)">玩学练模式 · 蛋仔派对</div>
-</div>
-<div class="card" style="text-align:center;cursor:pointer" onclick="startGame('calc')">
-<div style="font-size:40px">⚡</div>
-<div style="font-size:16px;font-weight:700;color:var(--pink-d)">速算冲刺</div>
-<div style="font-size:13px;color:var(--t2)">乘除法限时挑战</div>
-</div>
+<div class="pg-hd"><div class="pg-t">🎮 学习闯关</div><div class="pg-s">从易到难，边学边玩，通关赚积分！</div></div>
+<div class="level-map">
+${renderRow('poem','📜','古诗闯关','6关·认识诗人到古诗达人')}
+${renderRow('math','🧮','数学思维','8关·乘除法从入门到精通')}
+${renderRow('eng','🔤','单词大冒险','6关·从选择到拼写')}
 </div>`
 }
 
-function startGame(type){
-gameData={type,score:0,qIdx:0,data:[]};
-if(type==='poem'){
-gameData.data=POEMS.map(p=>({q:`${p.t} 的作者是？`,opts:[p.a,...POEMS.filter(x=>x.a!==p.a).map(x=>x.a).sort(()=>Math.random()-.5).slice(0,2)].sort(()=>Math.random()-.5),ans:p.a}));
-}else if(type==='math'){
-/* 数学思维：一位数乘整十/整百/两位数/三位数，一位数除整十/整百/两位数/三位数 */
-const genMathQ=()=>{
-const types=['mul10','mul100','mul2','mul3','div10','div100','div2','div3'];
-const t=types[Math.floor(Math.random()*types.length)];
-const b=Math.floor(Math.random()*9)+2;
-let a,ans,q;
-if(t==='mul10'){a=(Math.floor(Math.random()*9)+1)*10;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='mul100'){a=(Math.floor(Math.random()*9)+1)*100;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='mul2'){a=Math.floor(Math.random()*90)+10;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='mul3'){a=Math.floor(Math.random()*900)+100;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='div10'){a=(Math.floor(Math.random()*9)+1)*10*b;ans=a/b;q=a+' ÷ '+b+' = ?'}
-else if(t==='div100'){a=(Math.floor(Math.random()*9)+1)*100*b;ans=a/b;q=a+' ÷ '+b+' = ?'}
-else if(t==='div2'){a=b*(Math.floor(Math.random()*90)+10);ans=a/b;q=a+' ÷ '+b+' = ?'}
-else{a=b*(Math.floor(Math.random()*900)+100);ans=a/b;q=a+' ÷ '+b+' = ?'}
-const w1=ans+Math.floor(Math.random()*8)+1;
-const w2=Math.max(0,ans-Math.floor(Math.random()*8)-1);
-return{q,opts:[ans.toString(),w1.toString(),w2.toString()].sort(()=>Math.random()-.5),ans:ans.toString()};
-};
-gameData.data=[];
-for(let i=0;i<10;i++)gameData.data.push(genMathQ());
-}else if(type==='eng'){
-const allWords=ENG_UNITS.flatMap(u=>u.words.map(w=>({word:w.w,cn:w.cn})));
-gameData.data=allWords.sort(()=>Math.random()-.5).slice(0,8).map(w=>{
-const others=allWords.filter(x=>x.cn!==w.cn).sort(()=>Math.random()-.5).slice(0,2);
-return{q:`"${w.word}" 的中文意思是？`,opts:[w.cn,...others.map(x=>x.cn)].sort(()=>Math.random()-.5),ans:w.cn,word:w.word};
-});
-}else if(type==='calc'){
-/* 速算冲刺：一位数乘整十/整百/两位/三位，一位数除整十/整百/两位/三位 */
-const genCalcQ=()=>{
-const types=['mul10','mul100','mul2','mul3','div10','div100','div2','div3'];
-const t=types[Math.floor(Math.random()*types.length)];
-const b=Math.floor(Math.random()*9)+2;
-let a,ans,q;
-if(t==='mul10'){a=(Math.floor(Math.random()*9)+1)*10;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='mul100'){a=(Math.floor(Math.random()*9)+1)*100;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='mul2'){a=Math.floor(Math.random()*90)+10;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='mul3'){a=Math.floor(Math.random()*900)+100;ans=a*b;q=a+' × '+b+' = ?'}
-else if(t==='div10'){a=(Math.floor(Math.random()*9)+1)*10*b;ans=a/b;q=a+' ÷ '+b+' = ?'}
-else if(t==='div100'){a=(Math.floor(Math.random()*9)+1)*100*b;ans=a/b;q=a+' ÷ '+b+' = ?'}
-else if(t==='div2'){a=b*(Math.floor(Math.random()*90)+10);ans=a/b;q=a+' ÷ '+b+' = ?'}
-else{a=b*(Math.floor(Math.random()*900)+100);ans=a/b;q=a+' ÷ '+b+' = ?'}
-const w1=ans+Math.floor(Math.random()*8)+1;
-const w2=Math.max(0,ans-Math.floor(Math.random()*8)-1);
-return{q,opts:[ans.toString(),w1.toString(),w2.toString()].sort(()=>Math.random()-.5),ans:ans.toString()};
-};
-gameData.data=[];
-for(let i=0;i<10;i++)gameData.data.push(genCalcQ());
-}
+/* ===== 启动关卡 ===== */
+function startLevel(type,lvl){
+if(!isUnlocked(type,lvl))return;
+const def=LEVELS[type].find(l=>l.id===lvl);
+const questions=genQuestions(type,lvl);
+gameData={type,levelId:lvl,levelDef:def,score:0,qIdx:0,lives:3,questions,maxScore:questions.length*10,isChallenge:false};
 showGameQ()
 }
 
+/* ===== 显示题目 ===== */
 function showGameQ(){
-if(gameData.qIdx>=gameData.data.length){endGame();return}
-const q=gameData.data[gameData.qIdx];
+const gd=gameData;
+if(gd.qIdx>=gd.questions.length||gd.lives<=0){endGame();return}
+const q=gd.questions[gd.qIdx];
+const hearts='❤'.repeat(gd.lives)+'🖤'.repeat(3-gd.lives);
+const exitBtn=`<div style="text-align:center;margin-top:12px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="quitGame()">← 返回地图</button></div>`;
+const hud=`<div class="game-hud"><span class="hud-hearts">${hearts}</span><span class="hud-progress">第 ${gd.qIdx+1}/${gd.questions.length} 题</span><span class="hud-score">得分 ${gd.score}</span></div>`;
+const title=`<div class="game-title">${gd.levelDef.icon} ${gd.levelDef.name}</div>`;
+
+/* 英语拼写题 */
+if(gd.type==='eng'&&q.mode==='fill'){
+const wordLen=q.ans.length;let blanks='';
+for(let i=0;i<wordLen;i++)blanks+=`<span class="fill-cell" id="gfc${i}" onclick="gFillSetPos(${i})">_</span> `;
 document.getElementById('mc').innerHTML=`
-<div class="game-title">🎮 ${gameData.type==='poem'?'古诗闯关':gameData.type==='math'?'数学思维':gameData.type==='eng'?'单词大冒险':'速算冲刺'}</div>
-<div style="text-align:center;font-size:14px;color:var(--t2)">第 ${gameData.qIdx+1} / ${gameData.data.length} 题 · 得分：${gameData.score}</div>
+${hud}${title}
+<div style="text-align:center;font-size:14px;color:var(--t2);margin:8px 0">请根据中文拼出英文单词</div>
+<div style="text-align:center;margin:8px 0;font-size:22px;font-weight:800;color:var(--pink-d)">${q.q}</div>
+<div style="text-align:center;margin:16px 0;letter-spacing:2px">${blanks}</div>
+<div class="eng-keyboard" id="gKb"></div>
+<div class="mf" style="margin-top:12px"><button class="bse" style="font-size:13px;padding:6px 14px" onclick="gFillClear()">清除</button> <button class="bpr" onclick="gFillSubmit('${q.ans}')">确认</button></div>
+${exitBtn}`;
+const letters='abcdefghijklmnopqrstuvwxyz'.split('');
+document.getElementById('gKb').innerHTML=letters.map(l=>`<button class="kb-key" onclick="gFillInput('${l}')">${l}</button>`).join('');
+gameData.fillPos=0;gameData.fillInput=[];
+}else{
+/* 选择题 */
+const optsStr=q.opts.map((o,i)=>`<button class="game-opt" onclick="gameAns(${i})">${o}</button>`).join('');
+document.getElementById('mc').innerHTML=`
+${hud}${title}
 <div class="game-q">${q.q}</div>
-<div class="game-opts">${q.opts.map(o=>`<button class="game-opt" onclick="gameAns('${o}','${q.ans}',${q.word?'true':'false'},'${q.word||''}')">${o}</button>`).join('')}</div>
-<div style="text-align:center;margin-top:16px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="quitGame()">← 退出游戏</button></div>`;
+<div class="game-opts" id="gameOpts">${optsStr}</div>
+${exitBtn}`;
+}
 document.getElementById('mm').classList.add('show')
 }
-function quitGame(){
-clM();go('game')
+
+/* 选择题答题 */
+function gameAns(optIdx){
+const gd=gameData;const q=gd.questions[gd.qIdx];const sel=q.opts[optIdx];const ok=sel===q.ans;
+const btns=document.querySelectorAll('#gameOpts .game-opt');
+btns.forEach((b,i)=>{b.classList.add(q.opts[i]===q.ans?'ok':'no');b.disabled=true});
+if(ok){gd.score+=10;playSound('right')}
+else{gd.lives--;playSound('wrong');if(gd.type==='eng'&&q.word){const u=ENG_UNITS.find(x=>x.id===q.unitId);if(u)engWordErr(q.word,q.unitId)}}
+setTimeout(()=>{gd.qIdx++;clM();setTimeout(()=>{if(gd.lives<=0||gd.qIdx>=gd.questions.length)endGame();else showGameQ()},300)},600)
 }
-function gameAns(sel,ans,isEng,word){
-const ok=sel===ans;
-if(ok){gameData.score+=10;playSound('right')}
-else{playSound('wrong')}
-// 英语错题入错题本
-if(isEng==='true'&&word&&!ok){
-const unit=ENG_UNITS.find(u=>u.words.some(w=>w.w===word));
-if(unit)engWordErr(word,unit.id);
+
+/* 拼写题输入 */
+function gFillInput(letter){const gd=gameData;const len=gd.questions[gd.qIdx].ans.length;if(gd.fillPos>=len)return;
+const lower=letter.toLowerCase();gd.fillInput[gd.fillPos]=lower;
+const el=document.getElementById('gfc'+gd.fillPos);el.textContent=lower;el.classList.add('filled');gd.fillPos++;
+if(gd.fillPos<len)document.getElementById('gfc'+gd.fillPos).classList.add('cursor')}
+function gFillSetPos(pos){gameData.fillPos=pos}
+function gFillClear(){const gd=gameData;const len=gd.questions[gd.qIdx].ans.length;gd.fillInput=[];gd.fillPos=0;
+for(let i=0;i<len;i++){const el=document.getElementById('gfc'+i);el.textContent='_';el.classList.remove('filled','cursor')}}
+function gFillSubmit(correctWord){const gd=gameData;const input=gd.fillInput.join('').toLowerCase();const correct=correctWord.toLowerCase();const q=gd.questions[gd.qIdx];
+if(input===correct){gd.score+=10;playSound('right');toast('正确！','ok')}
+else{gd.lives--;playSound('wrong');if(q.word){const u=ENG_UNITS.find(x=>x.id===q.unitId);if(u)engWordErr(q.word,q.unitId)}toast('答案：'+correctWord,'no')}
+setTimeout(()=>{gd.qIdx++;clM();setTimeout(()=>{if(gd.lives<=0||gd.qIdx>=gd.questions.length)endGame();else showGameQ()},300)},800)
 }
-document.querySelectorAll('.game-opt').forEach(b=>{b.classList.add(b.textContent===ans?'ok':'no');b.disabled=true});
-setTimeout(()=>{gameData.qIdx++;clM();setTimeout(showGameQ,200)},600)
-}
+
+/* ===== 退出游戏 ===== */
+function quitGame(){clM();go('game')}
+
+/* ===== 关卡结算 ===== */
 function endGame(){
+const gd=gameData;
+if(gd.isChallenge){endChallenge();return}
+const failed=gd.lives<=0&&gd.qIdx<gd.questions.length;
+const pct=gd.maxScore>0?Math.round(gd.score/gd.maxScore*100):0;
+let stars=0;if(pct>=100)stars=3;else if(pct>=80)stars=2;else if(pct>=60)stars=1;
+const gp=getGP(gd.type);const old=gp.levels[gd.levelId]||{stars:0,bestScore:0,completed:false};
+const isFirst=!old.completed&&stars>=1;
+gp.levels[gd.levelId]={stars:Math.max(old.stars,stars),bestScore:Math.max(old.bestScore,gd.score),completed:stars>=1||old.completed};
+if(stars>=1)unlockNext(gd.type,gd.levelId);
+const starPts=[0,1,3,5];let pts=starPts[stars];if(isFirst)pts+=2;
+if(stars>=1){S.pts+=pts;save();updUI();if(stars===3)playSound('allDone')}
+const hasNext=LEVELS[gd.type].some(l=>l.id===gd.levelId+1);
+const starDisplay='⭐'.repeat(stars)+'☆'.repeat(3-stars);
+if(failed){
 document.getElementById('mc').innerHTML=`
-<div class="game-title">🎉 游戏结束</div>
-<div style="text-align:center;font-size:28px;font-weight:800;color:var(--pink-d);margin:20px 0">得分：${gameData.score}</div>
-<div style="text-align:center;font-size:14px;color:var(--t2)">${gameData.score>=60?'太棒了！获得2积分！':'继续加油！获得1积分！'}</div>
-<div class="mf"><button class="bpr" onclick="S.pts+=${gameData.score>=60?2:1};save();updUI();clM();toast('获得积分！','ok');go('game')">领取积分</button></div>`;
+<div class="result-card">
+<div class="game-title">💔 通关失败</div>
+<div style="font-size:48px;margin:12px 0">💔</div>
+<div class="result-score">${gd.score} / ${gd.maxScore}</div>
+<div class="result-pct">正确率 ${pct}%</div>
+<div style="font-size:14px;color:var(--red);margin:8px 0">生命值用完了，再试一次吧！</div>
+<div class="result-actions">
+<button class="btn-retry" onclick="startLevel('${gd.type}',${gd.levelId})">重新挑战</button>
+<button class="btn-back" onclick="quitGame()">返回地图</button>
+</div></div>`;
+}else{
+document.getElementById('mc').innerHTML=`
+<div class="result-card">
+<div class="game-title">🎉 第${gd.levelId}关 通关！</div>
+<div class="result-stars">${starDisplay}</div>
+<div class="result-score">${gd.score} / ${gd.maxScore}</div>
+<div class="result-pct">正确率 ${pct}%</div>
+${stars>=1?`<div class="result-pts">获得 ${pts} ☀${isFirst?' (含首次通关+2)':''}</div>`:''}
+<div class="result-actions">
+<button class="btn-retry" onclick="startLevel('${gd.type}',${gd.levelId})">重玩本关</button>
+${hasNext?`<button class="btn-next" onclick="startLevel('${gd.type}',${gd.levelId+1})">下一关 ▶</button>`:`<button class="btn-next" style="background:var(--lav)" onclick="quitGame()">全部通关🏆</button>`}
+</div>
+<div style="margin-top:8px"><button class="btn-back" onclick="quitGame()" style="width:100%">返回地图</button></div>
+</div>`;
+}
+document.getElementById('mm').classList.add('show')
+}
+
+/* ===== 限时挑战模式 ===== */
+let challengeTimer=null;
+function startMathChallenge(){
+const gp=getGP('math');if(gp.unlocked<5){toast('通关第4关后解锁限时挑战！','no');return}
+gameData={type:'math',levelId:'challenge',levelDef:{icon:'⚡',name:'限时挑战'},score:0,qIdx:0,lives:5,questions:[],maxScore:9999,isChallenge:true,timeLeft:60};
+showChallengeQ();
+startChallengeTimer();
+}
+function startChallengeTimer(){
+if(challengeTimer)clearInterval(challengeTimer);
+challengeTimer=setInterval(()=>{
+gameData.timeLeft--;
+if(gameData.timeLeft<=0){clearInterval(challengeTimer);challengeTimer=null;endChallenge();return}
+const bar=document.getElementById('timerFill');if(bar)bar.style.width=(gameData.timeLeft/60*100)+'%';
+const txt=document.getElementById('timerText');if(txt){txt.textContent='⏱ '+gameData.timeLeft+'秒';if(gameData.timeLeft<=10)txt.classList.add('urgent')}
+},1000)
+}
+function genChallengeQ(){
+const types=['mul10','mul100','mul2','mul3','div10','div100','div2','div3'];
+return genMathByType(types[Math.floor(Math.random()*types.length)]);
+}
+function showChallengeQ(){
+const gd=gameData;const q=genChallengeQ();gd._curQ=q;
+const hearts='❤'.repeat(gd.lives)+'🖤'.repeat(5-gd.lives);
+const pct=gd.timeLeft/60*100;
+document.getElementById('mc').innerHTML=`
+<div class="game-hud"><span class="hud-hearts">${hearts}</span><span class="hud-progress">⚡ 限时挑战</span><span class="hud-score">得分 ${gd.score}</span></div>
+<div class="timer-bar"><div class="timer-fill" id="timerFill" style="width:${pct}%"></div></div>
+<div class="timer-text" id="timerText">⏱ ${gd.timeLeft}秒</div>
+<div class="game-q">${q.q}</div>
+<div class="game-opts" id="gameOpts">${q.opts.map((o,i)=>`<button class="game-opt" onclick="challengeAns(${i})">${o}</button>`).join('')}</div>
+<div style="text-align:center;margin-top:12px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="quitChallenge()">← 返回地图</button></div>`;
+document.getElementById('mm').classList.add('show')
+}
+function challengeAns(optIdx){
+const gd=gameData;const q=gd._curQ;const sel=q.opts[optIdx];const ok=sel===q.ans;
+const btns=document.querySelectorAll('#gameOpts .game-opt');
+btns.forEach((b,i)=>{b.classList.add(q.opts[i]===q.ans?'ok':'no');b.disabled=true});
+if(ok){gd.score+=10;playSound('right')}else{gd.score=Math.max(0,gd.score-5);gd.lives--;playSound('wrong');
+if(gd.lives<=0){setTimeout(()=>{if(challengeTimer){clearInterval(challengeTimer);challengeTimer=null}endChallenge()},600);return}}
+setTimeout(()=>{clM();setTimeout(showChallengeQ,200)},500)
+}
+function quitChallenge(){if(challengeTimer){clearInterval(challengeTimer);challengeTimer=null}clM();go('game')}
+function endChallenge(){
+const gd=gameData;const gp=getGP('math');
+const isNewHigh=gd.score>gp.highScore;if(isNewHigh)gp.highScore=gd.score;
+const pts=Math.floor(gd.score/10);S.pts+=pts;save();updUI();
+document.getElementById('mc').innerHTML=`
+<div class="result-card">
+<div class="game-title">⚡ 限时挑战结束！</div>
+<div style="font-size:48px;margin:12px 0">${gd.lives<=0?'💔':'⏱'}</div>
+<div class="result-score">${gd.score} 分</div>
+<div class="result-pct">${gd.lives<=0?'生命值用完':'时间到！'}</div>
+${isNewHigh?`<div style="font-size:16px;color:var(--orange,#FF9F43);font-weight:700;margin:8px 0">🏆 新纪录！</div>`:`<div class="result-pct">最高分：${gp.highScore}</div>`}
+<div class="result-pts">获得 ${pts} ☀</div>
+<div class="result-actions">
+<button class="btn-retry" onclick="startMathChallenge()">再来一局</button>
+<button class="btn-back" onclick="quitChallenge()">返回地图</button>
+</div></div>`;
 document.getElementById('mm').classList.add('show')
 }
 
@@ -1349,7 +1626,7 @@ checkRemind();
 setInterval(checkRemind,60000);
 /* 注册Service Worker */
 if('serviceWorker' in navigator){
-navigator.serviceWorker.register('./sw.js?v4').then(reg=>{
+navigator.serviceWorker.register('./sw.js?v5').then(reg=>{
 /* 检测到新SW立即激活 */
 if(reg.waiting)reg.waiting.postMessage('skipWaiting');
 reg.addEventListener('updatefound',()=>{const nw=reg.installing;if(nw){nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&navigator.serviceWorker.controller){nw.postMessage('skipWaiting')}})}});
