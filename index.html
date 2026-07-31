@@ -977,8 +977,12 @@ document.getElementById('mc').innerHTML=`
 <div class="game-title">🎮 ${gameData.type==='poem'?'古诗闯关':gameData.type==='math'?'数学思维':gameData.type==='eng'?'单词大冒险':'速算冲刺'}</div>
 <div style="text-align:center;font-size:14px;color:var(--t2)">第 ${gameData.qIdx+1} / ${gameData.data.length} 题 · 得分：${gameData.score}</div>
 <div class="game-q">${q.q}</div>
-<div class="game-opts">${q.opts.map(o=>`<button class="game-opt" onclick="gameAns('${o}','${q.ans}',${q.word?'true':'false'},'${q.word||''}')">${o}</button>`).join('')}</div>`;
+<div class="game-opts">${q.opts.map(o=>`<button class="game-opt" onclick="gameAns('${o}','${q.ans}',${q.word?'true':'false'},'${q.word||''}')">${o}</button>`).join('')}</div>
+<div style="text-align:center;margin-top:16px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="quitGame()">← 退出游戏</button></div>`;
 document.getElementById('mm').classList.add('show')
+}
+function quitGame(){
+clM();go('game')
 }
 function gameAns(sel,ans,isEng,word){
 const ok=sel===ans;
