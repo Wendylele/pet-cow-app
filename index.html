@@ -936,26 +936,91 @@ ${errHtml}
 ${units}`
 }
 
-/* 英语单词测试弹窗 */
+/* 英语单词默写系统 */
+let engTestData=null;
 function engWordTest(unitId){
 const u=ENG_UNITS.find(x=>x.id===unitId);
-const wordObj=u.words[Math.floor(Math.random()*u.words.length)];
-const word=wordObj.w;
+/* 为每个单词生成2道题：1道看中文填英文，1道看英文选中文，共 words.length*2 题 */
+let questions=[];
+u.words.forEach((w,i)=>{
+questions.push({type:'fill',word:w.w,cn:w.cn,idx:i,unitId});
+questions.push({type:'choice',word:w.w,cn:w.cn,idx:i,unitId});
+});
+/* 打乱顺序 */
+questions=questions.sort(()=>Math.random()-.5);
+engTestData={unitId,unitTitle:u.t,questions,qIdx:0,score:0,total:questions.length,doneWords:new Set()};
+showEngTestQ();
+}
+
+function showEngTestQ(){
+if(!engTestData)return;
+const td=engTestData;
+if(td.qIdx>=td.questions.length){endEngTest();return}
+const q=td.questions[td.qIdx];
+const qNum=td.qIdx+1;
+const progress=`第 ${qNum} / ${td.total} 题 · 正确：${td.score}`;
+const exitBtn=`<div style="text-align:center;margin-top:12px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="engTestData=null;clM();go('eng')">← 退出默写</button></div>`;
+
+if(q.type==='fill'){
+/* 看中文填英文：显示中文，显示空格（每个字母一个下划线） */
+const blanks=q.word.split('').map(()=>'_').join(' ');
 document.getElementById('mc').innerHTML=`
-<div class="mt">单词默写测试</div>
-<div class="ms">${u.t}</div>
-<div style="text-align:center;margin:16px 0;font-size:20px;font-weight:800;color:var(--pink-d)">${word}</div>
-<div style="text-align:center;margin:8px 0;font-size:14px;color:var(--t2)">中文意思：${wordObj.cn}</div>
-<div class="mf"><button class="bpr" onclick="engWordOK('${unitId}','${word}')">记住了</button><button class="bse" onclick="engWordNO('${unitId}','${word}')">不记得</button></div>`;
-document.getElementById('mm').classList.add('show')
+<div class="mt">📝 单词默写</div>
+<div class="ms">${td.unitTitle} · ${progress}</div>
+<div style="text-align:center;margin:10px 0;font-size:14px;color:var(--t2)">请根据中文写出英文单词</div>
+<div style="text-align:center;margin:8px 0;font-size:20px;font-weight:800;color:var(--pink-d)">${q.cn}</div>
+<div style="text-align:center;margin:16px 0;font-size:28px;font-weight:800;color:var(--lav-d);letter-spacing:4px;font-family:monospace">${blanks}</div>
+<div class="mf"><button class="bpr" onclick="engTestAns(true,'fill')">记住了</button><button class="bse" onclick="engTestAns(false,'fill')">不记得</button></div>
+${exitBtn}`;
+}else{
+/* 看英文选中文：显示英文，给3个中文选项 */
+const u=ENG_UNITS.find(x=>x.id===q.unitId);
+const others=u.words.filter(w=>w.w!==q.word).sort(()=>Math.random()-.5).slice(0,2);
+const opts=[q.cn,...others.map(o=>o.cn)].sort(()=>Math.random()-.5);
+document.getElementById('mc').innerHTML=`
+<div class="mt">📝 单词默写</div>
+<div class="ms">${td.unitTitle} · ${progress}</div>
+<div style="text-align:center;margin:10px 0;font-size:14px;color:var(--t2)">请选择正确的中文意思</div>
+<div style="text-align:center;margin:8px 0;font-size:20px;font-weight:800;color:var(--pink-d)">${q.word}</div>
+<div class="game-opts" id="engOpts">${opts.map(o=>`<button class="game-opt" onclick="engTestChoice('${o}','${q.cn}')">${o}</button>`).join('')}</div>
+${exitBtn}`;
 }
-function engWordOK(unitId,word){
-const u=ENG_UNITS.find(x=>x.id===unitId);
-const idx=u.words.findIndex(w=>w.w===word);
-engWordDone(unitId,idx);clM();toast('太棒了！','ok');go('eng')
+document.getElementById('mm').classList.add('show');
 }
-function engWordNO(unitId,word){
-engWordErr(word,unitId);clM();toast('已加入错题本','no');go('eng')
+
+function engTestAns(ok,type){
+if(type==='fill'){
+/* 填空模式：记住了/不记得 */
+const q=engTestData.questions[engTestData.qIdx];
+if(ok){engTestData.score++;playSound('right');engWordDone(q.unitId,q.idx)}
+else{playSound('wrong');engWordErr(q.word,q.unitId)}
+engTestData.qIdx++;
+setTimeout(()=>{clM();setTimeout(showEngTestQ,200)},300);
+}
+}
+function engTestChoice(sel,ans){
+const ok=sel===ans;
+const q=engTestData.questions[engTestData.qIdx];
+document.querySelectorAll('#engOpts .game-opt').forEach(b=>{b.classList.add(b.textContent===ans?'ok':'no');b.disabled=true});
+if(ok){engTestData.score++;playSound('right');engWordDone(q.unitId,q.idx)}
+else{playSound('wrong');engWordErr(q.word,q.unitId)}
+engTestData.qIdx++;
+setTimeout(()=>{clM();setTimeout(showEngTestQ,600)},600);
+}
+function endEngTest(){
+const td=engTestData;
+const total=td.total;
+const score=td.score;
+const pct=Math.round(score/total*100);
+document.getElementById('mc').innerHTML=`
+<div class="mt">🎉 默写完成！</div>
+<div style="text-align:center;margin:16px 0">
+<div style="font-size:36px;font-weight:800;color:var(--pink-d)">${score}/${total}</div>
+<div style="font-size:14px;color:var(--t2);margin-top:4px">正确率 ${pct}%</div>
+<div style="font-size:14px;margin-top:8px">${pct>=80?'太棒了！':'继续加油！'}</div>
+</div>
+<div class="mf"><button class="bpr" onclick="engTestData=null;clM();go('eng')">完成</button></div>`;
+document.getElementById('mm').classList.add('show');
 }
 
 /* 5. 运动 */
