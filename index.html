@@ -761,7 +761,7 @@ ${poems.map(p=>`<div class="poem-c" onclick="showPoem('${p.id}')">
 <span class="tb tb-s3">${p.b}</span>
 <div class="poem-t">${p.t}</div>
 <div class="poem-a">【${p.a}】</div>
-<div class="poem-pr">${p.l[0].replace(/[\(（][^\)）]+[\)）]/g,'')}<br>${p.l[1].replace(/[\(（][^\)）]+[\)）]/g,'')}<br>...</div>
+<div class="poem-pr">${p.l.map(l=>l.replace(/[\(（][^\)）]+[\)）]/g,'')).join('<br>')}</div>
 <span class="poem-st ${p.mastered?'m':'t'}">${p.mastered?'已背诵 ✓':'去背诵'}</span>
 </div>`).join('')}
 </div>
@@ -800,34 +800,18 @@ const cleanLines=p.l.map(l=>l.replace(/[\(（][^\)）]+[\)）]/g,''));
 let lines=cleanLines.map(l=>`<div class="poem-line">${l}</div>`).join('');
 let defs=p.def?p.def[0]:{};
 let defHtml=Object.entries(defs).map(([k,v])=>`<span class="def">${k}：${v}</span>`).join(' ');
-// 选词填空背诵
-if(!ps.m){
-const fi=p.fill||0;
-const cc=cleanLines[fi][0];
-const ot=POEMS.filter(x=>x.id!==id).flatMap(x=>x.l.map(l=>l.replace(/[\(（][^\)）]+[\)）]/g,'')[0])).filter(c=>c!==cc);
-const ch=[cc,...ot.sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
 document.getElementById('mc').innerHTML=`
 <div class="mt">${p.t.replace(/[\(（][^\)）]+[\)）]/g,'')}</div>
-<div class="ms">【${p.a}】· 选出正确的字</div>
-${cleanLines.map((l,i)=>`<div class="poem-line">${i===fi?'<span class="fill-blank">　　</span>'+l.slice(1):l}</div>`).join('')}
-<div style="margin:6px 0;font-size:13px;color:var(--lav-d)">重点释义：${defHtml}</div>
-<div class="choice-row" id="cRow">${ch.map(c=>`<button class="choice-btn" onclick="ansPoem('${id}','${c}','${cc}')">${c}</button>`).join('')}</div>
-<div class="mf"><button class="bse" onclick="clM()">放弃</button></div>`;
-}else{
-document.getElementById('mc').innerHTML=`
-<div class="mt">${p.t.replace(/[\(（][^\)）]+[\)）]/g,'')}</div>
-<div class="ms">【${p.a}】· 已背诵 ✓</div>
+<div class="ms">【${p.a}】${ps.m?'· 已背诵 ✓':''}</div>
 ${lines}
-<div style="margin:6px 0;font-size:13px;color:var(--lav-d)">重点释义：${defHtml}</div>
-<div class="mf"><button class="bpr" onclick="clM()">关闭</button></div>`;
-}
+<div style="margin:8px 0;font-size:13px;color:var(--lav-d);line-height:1.8">📖 重点释义：${defHtml}</div>
+<div class="mf">
+${ps.m?'':'<button class="bpr" onclick="masterPoem(\''+id+'\');S.cnPoemIdx++;clM();go(\'cn\')">我会背了 ✓</button> '}
+<button class="${ps.m?'bpr':'bse'}" onclick="clM()">关闭</button>
+</div>`;
 document.getElementById('mm').classList.add('show')
 }
-function ansPoem(id,c,cc){
-document.querySelectorAll('#cRow .choice-btn').forEach(b=>{if(b.textContent===c)b.classList.add(c===cc?'ok':'no');b.disabled=true});
-if(c===cc){setTimeout(()=>{masterPoem(id);S.cnPoemIdx++;clM();go('cn')},600)}
-else{setTimeout(()=>{toast('再想想！','no');setTimeout(()=>showPoem(id),800)},600)}
-}
+function ansPoem(id,c,cc){}
 
 /* 3. 数学 */
 function pgMath(){
