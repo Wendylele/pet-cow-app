@@ -1,16 +1,11 @@
-const CACHE_NAME = 'petCow-v3';
+const CACHE_NAME = 'petCow-v4';
 
-/* 安装：只缓存最关键的入口文件，其他按需缓存 */
+/* 安装：跳过等待，立即激活 */
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      /* 只缓存入口页面，确保安装不会失败 */
-      return cache.add('/pet-cow-app/');
-    }).then(() => self.skipWaiting())
-  );
+  self.skipWaiting();
 });
 
-/* 激活：清理旧缓存，立即接管所有页面 */
+/* 激活：删除所有旧缓存，立即接管页面 */
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -21,28 +16,24 @@ self.addEventListener('activate', event => {
   );
 });
 
-/* 请求策略：缓存优先，后台更新（Cache-then-Network）
-   这样即使网络不好，也能立即从缓存返回页面 */
+/* 请求策略：网络优先，网络失败才用缓存
+   这样每次打开都能拿到最新版本 */
 self.addEventListener('fetch', event => {
-  /* 只处理GET请求 */
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
-    caches.match(event.request).then(cached => {
-      /* 有缓存就立即返回，同时后台静默更新缓存 */
-      const fetchPromise = fetch(event.request).then(response => {
-        if (response && response.status === 200) {
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, response.clone());
-          });
-        }
-        return response;
-      }).catch(() => {
-        /* 网络完全失败，返回缓存的首页作为兜底 */
-        return caches.match('/pet-cow-app/');
-      });
-
-      return cached || fetchPromise;
+    fetch(event.request).then(response => {
+      /* 网络成功：更新缓存，返回最新内容 */
+      if (response && response.status === 200) {
+        const clone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, clone);
+        });
+      }
+      return response;
+    }).catch(() => {
+      /* 网络失败：回退到缓存 */
+      return caches.match(event.request).then(r => r || caches.match('/pet-cow-app/'));
     })
   );
 });

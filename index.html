@@ -1136,14 +1136,17 @@ checkRemind();
 setInterval(checkRemind,60000);
 /* 注册Service Worker */
 if('serviceWorker' in navigator){
-navigator.serviceWorker.register('./sw.js').then(reg=>{
-console.log('SW注册成功');
-}).catch(err=>{
-console.log('SW注册失败:',err);
-});
+navigator.serviceWorker.register('./sw.js?v4').then(reg=>{
+/* 检测到新SW立即激活 */
+if(reg.waiting)reg.waiting.postMessage('skipWaiting');
+reg.addEventListener('updatefound',()=>{const nw=reg.installing;if(nw){nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&navigator.serviceWorker.controller){nw.postMessage('skipWaiting')}})}});
+console.log('SW注册成功 v4');
+}).catch(err=>{console.log('SW注册失败:',err)});
 }
 });
 window.addEventListener('hashchange',()=>{const h=location.hash.replace('#','');if(h)go(h)});
+/* SW更新后自动刷新页面 */
+navigator.serviceWorker.addEventListener('controllerchange',()=>{location.reload()});
 </script>
 </body>
 </html>
