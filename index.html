@@ -176,6 +176,7 @@ a{color:inherit;text-decoration:none}
 .kb-key{width:32px;height:36px;border-radius:8px;background:var(--lav-l);color:var(--lav-d);font-size:15px;font-weight:700;border:1px solid var(--lav);cursor:pointer;transition:all .1s}
 .kb-key:hover{background:var(--lav);color:#fff}
 .kb-key:active{transform:scale(.92)}
+.kb-space{width:80px;font-size:13px}
 .game-score{font-size:16px;font-weight:700;color:var(--pink-d);margin:10px 0}
 /* 宠物 */
 .pet-area{background:linear-gradient(135deg,#FFF5D6,#FFEFB0);border-radius:var(--r);padding:20px;text-align:center;box-shadow:var(--sh)}
@@ -987,7 +988,7 @@ document.getElementById('mc').innerHTML=`
 ${exitBtn}`;
 /* 生成字母键盘 */
 const letters='abcdefghijklmnopqrstuvwxyz'.split('');
-document.getElementById('engKb').innerHTML=letters.map(l=>`<button class="kb-key" onclick="engFillInput('${l}')">${l}</button>`).join('');
+document.getElementById('engKb').innerHTML=letters.map(l=>`<button class="kb-key" onclick="engFillInput('${l}')">${l}</button>`).join('')+`<button class="kb-key kb-space" onclick="engFillInput(' ')">␣ 空格</button>`;
 engTestData.fillPos=0;
 engTestData.fillInput=[];
 }
