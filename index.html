@@ -341,16 +341,36 @@ const MATH_COURSE=[
 ]
 
 const ENG_UNITS=[
-{id:'u1',t:'Unit1 School',words:['school','classmate','teacher','play sports','read','book','study','friend']},
-{id:'u2',t:'Unit2 Hobbies',words:['draw','tell a story','dance','sing','use the computer','run','jump']},
-{id:'u3',t:'Unit3 Garden',words:['garden','flower','vegetable','plant','orange tree','tomato','carrot']},
-{id:'u4',t:'Unit4 Water',words:['water','river','lake','sea','water vapour','cloud','rain','snow','ice']},
-{id:'u5',t:'Unit5 Helping',words:['help','cook','do the dishes','clean the table','walk the dog','chore','give your seat']},
-{id:'u6',t:'Unit6 Feelings',words:['happy','sad','good','bad','excited','scared','tired','unhappy']},
-{id:'u7',t:'Unit7 Jobs',words:['driver','police officer','engineer','author','doctor','chef','astronaut']},
-{id:'u8',t:'Unit8 Places',words:['library','find the way','get to','walk along','road','left','right','get lost','museum']},
-{id:'u9',t:'Unit9 Festivals',words:['special days','the Double Ninth Festival','celebrate','Chinese New Year','the Spring Festival','the Lantern Festival','holiday']},
-{id:'u10',t:'Unit10 Food',words:['food','noodles','pizza','sandwich','hot dog','meatball','fish and chips','beef','bread','cake']}
+{id:'u1',t:'Unit1 School',words:[
+{w:'school',cn:'学校'},{w:'classmate',cn:'同学'},{w:'teacher',cn:'老师'},{w:'play sports',cn:'做运动'},
+{w:'read',cn:'阅读'},{w:'book',cn:'书'},{w:'study',cn:'学习'},{w:'friend',cn:'朋友'}]},
+{id:'u2',t:'Unit2 Hobbies',words:[
+{w:'draw',cn:'画画'},{w:'tell a story',cn:'讲故事'},{w:'dance',cn:'跳舞'},{w:'sing',cn:'唱歌'},
+{w:'use the computer',cn:'用电脑'},{w:'run',cn:'跑步'},{w:'jump',cn:'跳跃'}]},
+{id:'u3',t:'Unit3 Garden',words:[
+{w:'garden',cn:'花园'},{w:'flower',cn:'花'},{w:'vegetable',cn:'蔬菜'},{w:'plant',cn:'植物'},
+{w:'orange tree',cn:'橘子树'},{w:'tomato',cn:'西红柿'},{w:'carrot',cn:'胡萝卜'}]},
+{id:'u4',t:'Unit4 Water',words:[
+{w:'water',cn:'水'},{w:'river',cn:'河流'},{w:'lake',cn:'湖泊'},{w:'sea',cn:'海洋'},
+{w:'water vapour',cn:'水蒸气'},{w:'cloud',cn:'云'},{w:'rain',cn:'雨'},{w:'snow',cn:'雪'},{w:'ice',cn:'冰'}]},
+{id:'u5',t:'Unit5 Helping',words:[
+{w:'help',cn:'帮助'},{w:'cook',cn:'做饭'},{w:'do the dishes',cn:'洗碗'},{w:'clean the table',cn:'擦桌子'},
+{w:'walk the dog',cn:'遛狗'},{w:'chore',cn:'家务'},{w:'give your seat',cn:'让座'}]},
+{id:'u6',t:'Unit6 Feelings',words:[
+{w:'happy',cn:'开心的'},{w:'sad',cn:'伤心的'},{w:'good',cn:'好的'},{w:'bad',cn:'坏的'},
+{w:'excited',cn:'兴奋的'},{w:'scared',cn:'害怕的'},{w:'tired',cn:'累的'},{w:'unhappy',cn:'不开心的'}]},
+{id:'u7',t:'Unit7 Jobs',words:[
+{w:'driver',cn:'司机'},{w:'police officer',cn:'警察'},{w:'engineer',cn:'工程师'},{w:'author',cn:'作家'},
+{w:'doctor',cn:'医生'},{w:'chef',cn:'厨师'},{w:'astronaut',cn:'宇航员'}]},
+{id:'u8',t:'Unit8 Places',words:[
+{w:'library',cn:'图书馆'},{w:'find the way',cn:'找路'},{w:'get to',cn:'到达'},{w:'walk along',cn:'沿着走'},
+{w:'road',cn:'路'},{w:'left',cn:'左边'},{w:'right',cn:'右边'},{w:'get lost',cn:'迷路'},{w:'museum',cn:'博物馆'}]},
+{id:'u9',t:'Unit9 Festivals',words:[
+{w:'special days',cn:'特殊的日子'},{w:'the Double Ninth Festival',cn:'重阳节'},{w:'celebrate',cn:'庆祝'},
+{w:'Chinese New Year',cn:'中国新年'},{w:'the Spring Festival',cn:'春节'},{w:'the Lantern Festival',cn:'元宵节'},{w:'holiday',cn:'假日'}]},
+{id:'u10',t:'Unit10 Food',words:[
+{w:'food',cn:'食物'},{w:'noodles',cn:'面条'},{w:'pizza',cn:'披萨'},{w:'sandwich',cn:'三明治'},
+{w:'hot dog',cn:'热狗'},{w:'meatball',cn:'肉丸'},{w:'fish and chips',cn:'炸鱼薯条'},{w:'beef',cn:'牛肉'},{w:'bread',cn:'面包'},{w:'cake',cn:'蛋糕'}]}
 ]
 
 /* 数学练习题生成器 */
@@ -801,7 +821,7 @@ function pgEng(){
 let units=ENG_UNITS.map(u=>{
 const words=u.words.map((w,i)=>{
 const done=S.engWordDone[u.id+'_'+i];
-return`<div class="word-item"><span class="word-w">${w}</span><span class="word-st ${done?'done':'todo'}">${done?'✓':''}</span></div>`
+return`<div class="word-item"><span class="word-w">${w.w}<span style="font-size:12px;color:var(--t2);margin-left:6px">${w.cn}</span></span><span class="word-st ${done?'done':'todo'}">${done?'✓':''}</span></div>`
 }).join('');
 return`<div class="eng-unit">
 <span class="tb tb-eng">${u.t}</span>
@@ -833,17 +853,19 @@ ${units}`
 /* 英语单词测试弹窗 */
 function engWordTest(unitId){
 const u=ENG_UNITS.find(x=>x.id===unitId);
-const word=u.words[Math.floor(Math.random()*u.words.length)];
+const wordObj=u.words[Math.floor(Math.random()*u.words.length)];
+const word=wordObj.w;
 document.getElementById('mc').innerHTML=`
 <div class="mt">单词默写测试</div>
 <div class="ms">${u.t}</div>
 <div style="text-align:center;margin:16px 0;font-size:20px;font-weight:800;color:var(--pink-d)">${word}</div>
-<div style="text-align:center;margin:8px 0;font-size:14px;color:var(--t2)">请写出这个单词的中文意思</div>
+<div style="text-align:center;margin:8px 0;font-size:14px;color:var(--t2)">中文意思：${wordObj.cn}</div>
 <div class="mf"><button class="bpr" onclick="engWordOK('${unitId}','${word}')">记住了</button><button class="bse" onclick="engWordNO('${unitId}','${word}')">不记得</button></div>`;
 document.getElementById('mm').classList.add('show')
 }
 function engWordOK(unitId,word){
-const idx=ENG_UNITS.find(u=>u.id===unitId).words.indexOf(word);
+const u=ENG_UNITS.find(x=>x.id===unitId);
+const idx=u.words.findIndex(w=>w.w===word);
 engWordDone(unitId,idx);clM();toast('太棒了！','ok');go('eng')
 }
 function engWordNO(unitId,word){
@@ -908,10 +930,10 @@ gameData.data=[
 {q:'36÷4=?',opts:['9','8','6'],ans:'9'}
 ];
 }else if(type==='eng'){
-const allWords=ENG_UNITS.flatMap(u=>u.words.map(w=>({word:w,unit:u.t})));
+const allWords=ENG_UNITS.flatMap(u=>u.words.map(w=>({word:w.w,cn:w.cn})));
 gameData.data=allWords.sort(()=>Math.random()-.5).slice(0,8).map(w=>{
-const others=allWords.filter(x=>x.word!==w.word).sort(()=>Math.random()-.5).slice(0,2);
-return{q:`"${w.word}" 的中文意思是？`,opts:[w.unit,...others.map(x=>x.unit)].sort(()=>Math.random()-.5),ans:w.unit,word:w.word};
+const others=allWords.filter(x=>x.cn!==w.cn).sort(()=>Math.random()-.5).slice(0,2);
+return{q:`"${w.word}" 的中文意思是？`,opts:[w.cn,...others.map(x=>x.cn)].sort(()=>Math.random()-.5),ans:w.cn,word:w.word};
 });
 }else if(type==='calc'){
 for(let i=0;i<10;i++){
@@ -939,7 +961,7 @@ const ok=sel===ans;
 if(ok)gameData.score+=10;
 // 英语错题入错题本
 if(isEng==='true'&&word&&!ok){
-const unit=ENG_UNITS.find(u=>u.words.includes(word));
+const unit=ENG_UNITS.find(u=>u.words.some(w=>w.w===word));
 if(unit)engWordErr(word,unit.id);
 }
 document.querySelectorAll('.game-opt').forEach(b=>{b.classList.add(b.textContent===ans?'ok':'no');b.disabled=true});
