@@ -986,7 +986,7 @@ document.getElementById('mc').innerHTML=`
 <div class="mf" style="margin-top:12px"><button class="bse" style="font-size:13px;padding:6px 14px" onclick="engFillClear()">清除</button> <button class="bpr" onclick="engFillSubmit('${q.word}')">确认</button></div>
 ${exitBtn}`;
 /* 生成字母键盘 */
-const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const letters='abcdefghijklmnopqrstuvwxyz'.split('');
 document.getElementById('engKb').innerHTML=letters.map(l=>`<button class="kb-key" onclick="engFillInput('${l}')">${l}</button>`).join('');
 engTestData.fillPos=0;
 engTestData.fillInput=[];
