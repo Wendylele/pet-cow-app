@@ -125,8 +125,13 @@ a{color:inherit;text-decoration:none}
 .poem-st.t{background:var(--blue);color:var(--blue-d)}
 .poem-tag{background:#E8F8EA;border:1px solid var(--green);color:var(--green-d);font-size:13px;font-weight:600;padding:6px 14px;border-radius:16px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:transform .15s}
 .poem-tag:hover{transform:scale(1.05)}
-.pinyin{color:var(--pink-d);font-size:14px;display:inline;margin-left:4px;opacity:0;transition:opacity .2s}
-.pinyin.show{opacity:1}
+.poem-line{font-size:18px;line-height:2.2;color:var(--t1);text-align:center}
+.sq{display:inline-block;position:relative;cursor:pointer;border-bottom:2px dotted var(--pink-d);color:var(--pink-dd);margin:0 1px;transition:all .15s}
+.sq:hover{background:var(--pink-l);border-radius:4px}
+.sq .py-tip{display:none;position:absolute;bottom:140%;left:50%;transform:translateX(-50%);background:var(--pink-d);color:#fff;font-size:13px;padding:3px 10px;border-radius:10px;white-space:nowrap;z-index:10;font-weight:600}
+.sq .py-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--pink-d)}
+.sq.show .py-tip{display:block;animation:pyPop .2s ease}
+@keyframes pyPop{0%{transform:translateX(-50%) scale(0);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
 .def{color:var(--lav-d);font-size:12px;background:var(--lav-l);padding:2px 8px;border-radius:6px;display:inline-block;margin:2px}
 /* 数学预习 */
 .math-lesson{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh);margin-bottom:10px}
@@ -294,16 +299,16 @@ a{color:inherit;text-decoration:none}
 <script>
 /* ===== 教材数据 ===== */
 const POEMS=[
-{id:'p1',t:'山行',a:'杜牧',b:'三上',l:['远上寒山石径斜(xié)','白云生处有人家','停车坐爱枫林晚','霜叶红于二月花'],py:['xié','yǐn'],def:[{'寒山':'深秋时节的山','石径斜':'山路倾斜向上','霜叶':'经霜的枫叶'}],fill:1,r:5},
-{id:'p2',t:'赠刘景文',a:'苏轼',b:'三上',l:['荷尽已无擎(qíng)雨盖','菊残犹有傲霜枝','一年好景君须记','最是橙黄橘(jú)绿时'],py:['qíng','jú'],def:[{'擎雨盖':'托着雨伞似的荷叶','傲霜枝':'不怕霜打的菊枝','橙黄橘绿':'秋末初冬的美景'}],fill:0,r:5},
-{id:'p3',t:'夜书所见',a:'叶绍翁',b:'三上',l:['萧萧梧(wú)叶送寒声','江上秋风动客情','知有儿童挑(tiǎo)促织','夜深篱落一灯明'],py:['wú','tiǎo'],def:[{'萧萧':'风声','促织':'蟋蟀','篱落':'篱笆'}],fill:2,r:5},
-{id:'p4',t:'望天门山',a:'李白',b:'三上',l:['天门中断楚江开','碧水东流至此回(huí)','两岸青山相对出','孤帆一片日边来'],py:['huí'],def:[{'楚江':'长江','至此回':'在这里转弯','孤帆':'一只小船'}],fill:1,r:5},
-{id:'p5',t:'望洞庭',a:'刘禹锡',b:'三上',l:['湖光秋月两相和(hé)','潭面无风镜未磨','遥望洞庭山水翠','白银盘里一青螺(luó)'],py:['hé','luó'],def:[{'两相和':'相互交融','镜未磨':'水面平静如未打磨的铜镜','青螺':'洞庭湖中的君山'}],fill:3,r:5},
-{id:'p6',t:'早发白帝城',a:'李白',b:'三上',l:['朝辞白帝彩云间','千里江陵一日还(huán)','两岸猿声啼不住','轻舟已过万重山'],py:['huán'],def:[{'朝辞':'早晨离开','一日还':'一天就到了','万重山':'重重叠叠的山峦'}],fill:1,r:5},
-{id:'p7',t:'饮湖上初晴后雨',a:'苏轼',b:'三上',l:['水光潋滟(liàn yàn)晴方好','山色空蒙雨亦奇','欲把西湖比西子','淡妆浓抹总相宜'],py:['liàn yàn'],def:[{'潋滟':'水波荡漾闪烁的样子','空蒙':'云雾迷茫','西子':'西施，美女','淡妆浓抹':'无论淡雅还是浓艳'}],fill:1,r:5},
-{id:'p8',t:'采莲曲',a:'王昌龄',b:'三上',l:['荷叶罗裙一色裁','芙蓉向脸两边开','乱入池中看不见','闻歌始觉有人来'],py:[],def:[{'罗裙':'丝绸裙子','芙蓉':'荷花','乱入':'混入莲池中','闻歌':'听到歌声'}],fill:2,r:5},
-{id:'p9',t:'鹿柴(zhài)',a:'王维',b:'三上',l:['空山不见人','但闻人语响','返景(yǐng)入深林','复照青苔上'],py:['zhài','yǐng'],def:[{'鹿柴':'养鹿的栅栏，柴通寨','但闻':'只听到','返景':'夕阳返照','青苔':'绿色的苔藓'}],fill:2,r:5},
-{id:'p10',t:'所见',a:'袁枚',b:'三上',l:['牧童骑黄牛','歌声振林樾(yuè)','意欲捕鸣蝉','忽然闭口立'],py:['yuè'],def:[{'振林樾':'歌声震动了树林','意欲':'想要','鸣蝉':'叫着的蝉','闭口立':'突然闭嘴站立'}],fill:1,r:5}
+{id:'p1',t:'山行',a:'杜牧',b:'三上',l:['远上寒山石径斜','白云生处有人家','停车坐爱枫林晚','霜叶红于二月花'],def:[{'寒山':'深秋时节的山','石径斜':'山路倾斜向上','霜叶':'经霜的枫叶'}],py:{'斜':'xié','径':'jìng','霜':'shuāng','枫':'fēng'},r:5},
+{id:'p2',t:'赠刘景文',a:'苏轼',b:'三上',l:['荷尽已无擎雨盖','菊残犹有傲霜枝','一年好景君须记','最是橙黄橘绿时'],def:[{'擎雨盖':'托着雨伞似的荷叶','傲霜枝':'不怕霜打的菊枝','橙黄橘绿':'秋末初冬的美景'}],py:{'擎':'qíng','菊':'jú','残':'cán','傲':'ào','橙':'chéng','橘':'jú'},r:5},
+{id:'p3',t:'夜书所见',a:'叶绍翁',b:'三上',l:['萧萧梧叶送寒声','江上秋风动客情','知有儿童挑促织','夜深篱落一灯明'],def:[{'萧萧':'风声','促织':'蟋蟀','篱落':'篱笆'}],py:{'萧':'xiāo','梧':'wú','挑':'tiǎo','促':'cù','篱':'lí'},r:5},
+{id:'p4',t:'望天门山',a:'李白',b:'三上',l:['天门中断楚江开','碧水东流至此回','两岸青山相对出','孤帆一片日边来'],def:[{'楚江':'长江','至此回':'在这里转弯','孤帆':'一只小船'}],py:{'断':'duàn','楚':'chǔ','碧':'bì','帆':'fān'},r:5},
+{id:'p5',t:'望洞庭',a:'刘禹锡',b:'三上',l:['湖光秋月两相和','潭面无风镜未磨','遥望洞庭山水翠','白银盘里一青螺'],def:[{'两相和':'相互交融','镜未磨':'水面平静如未打磨的铜镜','青螺':'洞庭湖中的君山'}],py:{'和':'hé','潭':'tán','磨':'mó','遥':'yáo','庭':'tíng','螺':'luó'},r:5},
+{id:'p6',t:'早发白帝城',a:'李白',b:'三上',l:['朝辞白帝彩云间','千里江陵一日还','两岸猿声啼不住','轻舟已过万重山'],def:[{'朝辞':'早晨离开','一日还':'一天就到了','万重山':'重重叠叠的山峦'}],py:{'朝':'zhāo','辞':'cí','陵':'líng','还':'huán','猿':'yuán','啼':'tí'},r:5},
+{id:'p7',t:'饮湖上初晴后雨',a:'苏轼',b:'三上',l:['水光潋滟晴方好','山色空蒙雨亦奇','欲把西湖比西子','淡妆浓抹总相宜'],def:[{'潋滟':'水波荡漾闪烁的样子','空蒙':'云雾迷茫','西子':'西施，美女','淡妆浓抹':'无论淡雅还是浓艳'}],py:{'潋':'liàn','滟':'yàn','蒙':'méng','亦':'yì','宜':'yí'},r:5},
+{id:'p8',t:'采莲曲',a:'王昌龄',b:'三上',l:['荷叶罗裙一色裁','芙蓉向脸两边开','乱入池中看不见','闻歌始觉有人来'],def:[{'罗裙':'丝绸裙子','芙蓉':'荷花','乱入':'混入莲池中','闻歌':'听到歌声'}],py:{'裙':'qún','裁':'cái','芙':'fú','蓉':'róng','乱':'luàn','觉':'jué'},r:5},
+{id:'p9',t:'鹿柴',a:'王维',b:'三上',l:['空山不见人','但闻人语响','返景入深林','复照青苔上'],def:[{'鹿柴':'养鹿的栅栏，柴通寨','但闻':'只听到','返景':'夕阳返照','青苔':'绿色的苔藓'}],py:{'柴':'zhài','闻':'wén','返':'fǎn','景':'yǐng','苔':'tái'},r:5},
+{id:'p10',t:'所见',a:'袁枚',b:'三上',l:['牧童骑黄牛','歌声振林樾','意欲捕鸣蝉','忽然闭口立'],def:[{'振林樾':'歌声震动了树林','意欲':'想要','鸣蝉':'叫着的蝉','闭口立':'突然闭嘴站立'}],py:{'牧':'mù','振':'zhèn','樾':'yuè','欲':'yù','捕':'bǔ','蝉':'chán'},r:5}
 ]
 
 const MATH_COURSE=[
@@ -761,7 +766,7 @@ ${poems.map(p=>`<div class="poem-c" onclick="showPoem('${p.id}')">
 <span class="tb tb-s3">${p.b}</span>
 <div class="poem-t">${p.t}</div>
 <div class="poem-a">【${p.a}】</div>
-<div class="poem-pr">${p.l.map(l=>l.replace(/[\(（][^\)）]+[\)）]/g,'')).join('<br>')}</div>
+<div class="poem-pr">${p.l.join('<br>')}</div>
 <span class="poem-st ${p.mastered?'m':'t'}">${p.mastered?'已背诵 ✓':'去背诵'}</span>
 </div>`).join('')}
 </div>
@@ -795,14 +800,25 @@ ${poems.map(p=>`<div class="poem-c" onclick="showPoem('${p.id}')">
 function showPoem(id){
 const p=POEMS.find(x=>x.id===id);
 const ps=S.poems[id]||{m:false};
-/* 统一去掉拼音括号，得到纯净诗句 */
-const cleanLines=p.l.map(l=>l.replace(/[\(（][^\)）]+[\)）]/g,''));
-let lines=cleanLines.map(l=>`<div class="poem-line">${l}</div>`).join('');
+const pyMap=p.py||{};
+/* 把诗句中生字渲染成可点击的拼音标签 */
+function renderLine(l){
+let html='';
+for(const ch of l){
+if(pyMap[ch]){
+html+=`<span class="sq" onclick="togglePy(this)">${ch}<span class="py-tip">${pyMap[ch]}</span></span>`;
+}else{
+html+=ch;
+}
+}
+return html;
+}
+let lines=p.l.map(l=>`<div class="poem-line">${renderLine(l)}</div>`).join('');
 let defs=p.def?p.def[0]:{};
 let defHtml=Object.entries(defs).map(([k,v])=>`<span class="def">${k}：${v}</span>`).join(' ');
 document.getElementById('mc').innerHTML=`
-<div class="mt">${p.t.replace(/[\(（][^\)）]+[\)）]/g,'')}</div>
-<div class="ms">【${p.a}】${ps.m?'· 已背诵 ✓':''}</div>
+<div class="mt">${p.t}</div>
+<div class="ms">【${p.a}】${ps.m?'· 已背诵 ✓':''} · 点击生字看拼音</div>
 ${lines}
 <div style="margin:8px 0;font-size:13px;color:var(--lav-d);line-height:1.8">📖 重点释义：${defHtml}</div>
 <div class="mf">
@@ -810,6 +826,11 @@ ${ps.m?'':'<button class="bpr" onclick="masterPoem(\''+id+'\');S.cnPoemIdx++;clM
 <button class="${ps.m?'bpr':'bse'}" onclick="clM()">关闭</button>
 </div>`;
 document.getElementById('mm').classList.add('show')
+}
+function togglePy(el){
+/* 关闭其他已打开的拼音提示 */
+document.querySelectorAll('.sq.show').forEach(s=>{if(s!==el)s.classList.remove('show')});
+el.classList.toggle('show');
 }
 function ansPoem(id,c,cc){}
 
