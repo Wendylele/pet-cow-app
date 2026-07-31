@@ -453,14 +453,44 @@ document.getElementById('pmBar').style.width=Math.max(p.hp,p.full,p.happy,p.clea
 }
 function toast(m,t=''){const e=document.getElementById('toast');e.textContent=m;e.className='toast '+t+' show';clearTimeout(window._tt);window._tt=setTimeout(()=>e.className='toast '+t,2200)}
 
-/* 语音播报 */
-function speak(text){
-if(!('speechSynthesis' in window))return;
+/* 可爱音效系统：用Web Audio API合成甜美旋律 */
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+/* 播放单个音符 */
+function playNote(freq,start,dur,type='sine',vol=0.3){
+const ctx=getAudio();
+const osc=ctx.createOscillator();
+const gain=ctx.createGain();
+osc.type=type;osc.frequency.value=freq;
+gain.gain.setValueAtTime(0,ctx.currentTime+start);
+gain.gain.linearRampToValueAtTime(vol,ctx.currentTime+start+0.02);
+gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+start+dur);
+osc.connect(gain);gain.connect(ctx.destination);
+osc.start(ctx.currentTime+start);osc.stop(ctx.currentTime+start+dur);
+}
+/* 音效类型 */
+function playSound(type){
 try{
-speechSynthesis.cancel();
-const u=new SpeechSynthesisUtterance(text);
-u.lang='zh-CN';u.rate=1.1;u.pitch=1.3;u.volume=1;
-speechSynthesis.speak(u);
+const ctx=getAudio();if(ctx.state==='suspended')ctx.resume();
+if(type==='ok'){
+/* 打卡成功：叮咚~（两个上升音符，甜美清脆） */
+playNote(523,0,0.15,'sine',0.25);  // C5
+playNote(784,0.12,0.25,'sine',0.25); // G5
+}else if(type==='allDone'){
+/* 全部完成：欢快旋律 do mi sol do（叮叮叮叮~） */
+playNote(523,0,0.12,'triangle',0.3);   // C5
+playNote(659,0.1,0.12,'triangle',0.3); // E5
+playNote(784,0.2,0.12,'triangle',0.3); // G5
+playNote(1047,0.3,0.3,'triangle',0.3); // C6
+}else if(type==='right'){
+/* 答对了：叮~叮~（上升两音） */
+playNote(659,0,0.1,'sine',0.25);  // E5
+playNote(880,0.08,0.2,'sine',0.25); // A5
+}else if(type==='wrong'){
+/* 答错了：嘟~嘟~（下降两音，温和提示） */
+playNote(440,0,0.15,'sine',0.2);   // A4
+playNote(330,0.12,0.25,'sine',0.2); // E4
+}
 }catch(e){}
 }
 
@@ -490,8 +520,8 @@ save();updUI();
 /* 检查是否全部完成 */
 const allCkDone=Object.values(S.ck).every(Boolean);
 const allCustomDone=S.customTasks.every(t=>t.done);
-if(allCkDone&&allCustomDone){speak('你太厉害了！今天全部完成啦！')}
-else{speak('继续努力！')}
+if(allCkDone&&allCustomDone){playSound('allDone')}
+else{playSound('ok')}
 toast(`打卡成功！+${pts}积分`,'ok');go(location.hash.replace('#','')||'plan')
 }
 }
@@ -518,8 +548,8 @@ save();updUI();
 /* 检查是否全部完成 */
 const allCkDone=Object.values(S.ck).every(Boolean);
 const allCustomDone=S.customTasks.every(x=>x.done);
-if(allCkDone&&allCustomDone){speak('你太厉害了！今天全部完成啦！')}
-else{speak('继续努力！')}
+if(allCkDone&&allCustomDone){playSound('allDone')}
+else{playSound('ok')}
 toast(`打卡成功！+${t.pts}积分`,'ok');go('plan')
 }
 }
@@ -1009,8 +1039,8 @@ clM();go('game')
 }
 function gameAns(sel,ans,isEng,word){
 const ok=sel===ans;
-if(ok){gameData.score+=10;speak('你太棒了！')}
-else{speak('再想一想')}
+if(ok){gameData.score+=10;playSound('right')}
+else{playSound('wrong')}
 // 英语错题入错题本
 if(isEng==='true'&&word&&!ok){
 const unit=ENG_UNITS.find(u=>u.words.some(w=>w.w===word));
