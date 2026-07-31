@@ -462,10 +462,19 @@ function toast(m,t=''){const e=document.getElementById('toast');e.textContent=m;
 
 /* 可爱音效系统：用Web Audio API合成甜美旋律 */
 let audioCtx=null;
-function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function initAudio(){
+if(!audioCtx){
+try{audioCtx=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+}
+if(audioCtx.state==='suspended'){audioCtx.resume()}
+}
+/* 首次点击或触摸时初始化音频 */
+document.addEventListener('click',initAudio,{once:false});
+document.addEventListener('touchstart',initAudio,{once:false});
+function getAudio(){if(!audioCtx)initAudio();return audioCtx}
 /* 播放单个音符 */
 function playNote(freq,start,dur,type='sine',vol=0.3){
-const ctx=getAudio();
+const ctx=getAudio();if(!ctx)return;
 const osc=ctx.createOscillator();
 const gain=ctx.createGain();
 osc.type=type;osc.frequency.value=freq;
@@ -478,7 +487,13 @@ osc.start(ctx.currentTime+start);osc.stop(ctx.currentTime+start+dur);
 /* 音效类型 */
 function playSound(type){
 try{
-const ctx=getAudio();if(ctx.state==='suspended')ctx.resume();
+const ctx=getAudio();if(!ctx)return;
+if(ctx.state==='suspended'){
+ctx.resume().then(()=>{setTimeout(()=>doPlay(type),50)});
+}else{doPlay(type)}
+}catch(e){}
+}
+function doPlay(type){
 if(type==='ok'){
 /* 打卡成功：叮咚~（两个上升音符，甜美清脆） */
 playNote(523,0,0.15,'sine',0.25);  // C5
@@ -498,7 +513,6 @@ playNote(880,0.08,0.2,'sine',0.25); // A5
 playNote(440,0,0.15,'sine',0.2);   // A4
 playNote(330,0.12,0.25,'sine',0.2); // E4
 }
-}catch(e){}
 }
 
 /* 导航 */
