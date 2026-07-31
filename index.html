@@ -1012,8 +1012,9 @@ function engFillInput(letter){
 const td=engTestData;if(!td)return;
 const len=td.questions[td.qIdx].word.length;
 if(td.fillPos>=len)return;
-td.fillInput[td.fillPos]=letter;
-document.getElementById('fc'+td.fillPos).textContent=letter;
+const lower=letter.toLowerCase();
+td.fillInput[td.fillPos]=lower;
+document.getElementById('fc'+td.fillPos).textContent=lower;
 document.getElementById('fc'+td.fillPos).classList.add('filled');
 td.fillPos++;
 /* 自动跳到下一格 */
