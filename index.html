@@ -949,6 +949,8 @@ ${units}`
 let engTestData=null;
 function engWordTest(unitId){
 const u=ENG_UNITS.find(x=>x.id===unitId);
+/* 隐藏主页内容，防止偷看单词 */
+document.getElementById('ct').style.visibility='hidden';
 /* 为每个单词生成2道题：1道看中文填英文，1道看英文选中文，共 words.length*2 题 */
 let questions=[];
 u.words.forEach((w,i)=>{
@@ -968,7 +970,7 @@ if(td.qIdx>=td.questions.length){endEngTest();return}
 const q=td.questions[td.qIdx];
 const qNum=td.qIdx+1;
 const progress=`第 ${qNum} / ${td.total} 题 · 正确：${td.score}`;
-const exitBtn=`<div style="text-align:center;margin-top:12px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="engTestData=null;clM();go('eng')">← 退出默写</button></div>`;
+const exitBtn=`<div style="text-align:center;margin-top:12px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="engTestData=null;document.getElementById('ct').style.visibility='';clM();go('eng')">← 退出默写</button></div>`;
 
 if(q.type==='fill'){
 /* 看中文填英文：显示中文，用字母键盘逐个填入 */
@@ -1071,7 +1073,7 @@ document.getElementById('mc').innerHTML=`
 <div style="font-size:14px;color:var(--t2);margin-top:4px">正确率 ${pct}%</div>
 <div style="font-size:14px;margin-top:8px">${pct>=80?'太棒了！':'继续加油！'}</div>
 </div>
-<div class="mf"><button class="bpr" onclick="engTestData=null;clM();go('eng')">完成</button></div>`;
+<div class="mf"><button class="bpr" onclick="engTestData=null;document.getElementById('ct').style.visibility='';clM();go('eng')">完成</button></div>`;
 document.getElementById('mm').classList.add('show');
 }
 
