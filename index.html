@@ -168,6 +168,14 @@ a{color:inherit;text-decoration:none}
 .game-opt.sel{border-color:var(--pink)}
 .game-opt.ok{background:var(--green);color:#fff;border-color:var(--green)}
 .game-opt.no{background:var(--red);color:#fff;border-color:var(--red)}
+/* 英语填空键盘 */
+.fill-cell{display:inline-block;width:30px;height:36px;line-height:36px;text-align:center;font-size:22px;font-weight:800;color:var(--lav-d);border-bottom:3px solid var(--lav);margin:0 3px;font-family:monospace;cursor:pointer}
+.fill-cell.filled{color:var(--pink-d);border-bottom-color:var(--pink)}
+.fill-cell.cursor{border-bottom-color:var(--pink-d);background:var(--pink-l)}
+.eng-keyboard{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin:12px 0}
+.kb-key{width:32px;height:36px;border-radius:8px;background:var(--lav-l);color:var(--lav-d);font-size:15px;font-weight:700;border:1px solid var(--lav);cursor:pointer;transition:all .1s}
+.kb-key:hover{background:var(--lav);color:#fff}
+.kb-key:active{transform:scale(.92)}
 .game-score{font-size:16px;font-weight:700;color:var(--pink-d);margin:10px 0}
 /* 宠物 */
 .pet-area{background:linear-gradient(135deg,#FFF5D6,#FFEFB0);border-radius:var(--r);padding:20px;text-align:center;box-shadow:var(--sh)}
@@ -962,17 +970,28 @@ const progress=`第 ${qNum} / ${td.total} 题 · 正确：${td.score}`;
 const exitBtn=`<div style="text-align:center;margin-top:12px"><button style="font-size:13px;padding:6px 18px;border-radius:14px;background:var(--bg2);color:var(--t2);border:none;cursor:pointer;font-weight:600" onclick="engTestData=null;clM();go('eng')">← 退出默写</button></div>`;
 
 if(q.type==='fill'){
-/* 看中文填英文：显示中文，显示空格（每个字母一个下划线） */
-const blanks=q.word.split('').map(()=>'_').join(' ');
+/* 看中文填英文：显示中文，用字母键盘逐个填入 */
+const wordLen=q.word.length;
+let blanksHtml='';
+for(let i=0;i<wordLen;i++){
+blanksHtml+=`<span class="fill-cell" id="fc${i}" onclick="engFillSetPos(${i})">_</span> `;
+}
 document.getElementById('mc').innerHTML=`
 <div class="mt">📝 单词默写</div>
 <div class="ms">${td.unitTitle} · ${progress}</div>
-<div style="text-align:center;margin:10px 0;font-size:14px;color:var(--t2)">请根据中文写出英文单词</div>
+<div style="text-align:center;margin:10px 0;font-size:14px;color:var(--t2)">请根据中文拼出英文单词</div>
 <div style="text-align:center;margin:8px 0;font-size:20px;font-weight:800;color:var(--pink-d)">${q.cn}</div>
-<div style="text-align:center;margin:16px 0;font-size:28px;font-weight:800;color:var(--lav-d);letter-spacing:4px;font-family:monospace">${blanks}</div>
-<div class="mf"><button class="bpr" onclick="engTestAns(true,'fill')">记住了</button><button class="bse" onclick="engTestAns(false,'fill')">不记得</button></div>
+<div style="text-align:center;margin:16px 0;letter-spacing:2px">${blanksHtml}</div>
+<div class="eng-keyboard" id="engKb"></div>
+<div class="mf" style="margin-top:12px"><button class="bse" style="font-size:13px;padding:6px 14px" onclick="engFillClear()">清除</button> <button class="bpr" onclick="engFillSubmit('${q.word}')">确认</button></div>
 ${exitBtn}`;
-}else{
+/* 生成字母键盘 */
+const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+document.getElementById('engKb').innerHTML=letters.map(l=>`<button class="kb-key" onclick="engFillInput('${l}')">${l}</button>`).join('');
+engTestData.fillPos=0;
+engTestData.fillInput=[];
+}
+else{
 /* 看英文选中文：显示英文，给3个中文选项 */
 const u=ENG_UNITS.find(x=>x.id===q.unitId);
 const others=u.words.filter(w=>w.w!==q.word).sort(()=>Math.random()-.5).slice(0,2);
@@ -988,15 +1007,46 @@ ${exitBtn}`;
 document.getElementById('mm').classList.add('show');
 }
 
-function engTestAns(ok,type){
-if(type==='fill'){
-/* 填空模式：记住了/不记得 */
-const q=engTestData.questions[engTestData.qIdx];
-if(ok){engTestData.score++;playSound('right');engWordDone(q.unitId,q.idx)}
-else{playSound('wrong');engWordErr(q.word,q.unitId)}
-engTestData.qIdx++;
-setTimeout(()=>{clM();setTimeout(showEngTestQ,200)},300);
+/* 填空输入相关 */
+function engFillInput(letter){
+const td=engTestData;if(!td)return;
+const len=td.questions[td.qIdx].word.length;
+if(td.fillPos>=len)return;
+td.fillInput[td.fillPos]=letter;
+document.getElementById('fc'+td.fillPos).textContent=letter;
+document.getElementById('fc'+td.fillPos).classList.add('filled');
+td.fillPos++;
+/* 自动跳到下一格 */
+if(td.fillPos<len){
+document.getElementById('fc'+td.fillPos).classList.add('cursor');
 }
+}
+function engFillSetPos(pos){
+engTestData.fillPos=pos;
+}
+function engFillClear(){
+const td=engTestData;if(!td)return;
+const len=td.questions[td.qIdx].word.length;
+td.fillInput=[];td.fillPos=0;
+for(let i=0;i<len;i++){
+document.getElementById('fc'+i).textContent='_';
+document.getElementById('fc'+i).classList.remove('filled');
+}
+}
+function engFillSubmit(correctWord){
+const td=engTestData;if(!td)return;
+const input=td.fillInput.join('').toLowerCase();
+const correct=correctWord.toLowerCase();
+const q=td.questions[td.qIdx];
+if(input===correct){
+engTestData.score++;playSound('right');engWordDone(q.unitId,q.idx);
+toast('正确！','ok');
+}else{
+playSound('wrong');engWordErr(q.word,q.unitId);
+toast('正确答案：'+correctWord,'no');
+}
+engTestData.qIdx++;
+setTimeout(()=>{clM();setTimeout(showEngTestQ,800)},800);
 }
 function engTestChoice(sel,ans){
 const ok=sel===ans;
