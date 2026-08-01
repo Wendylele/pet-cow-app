@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="小雪学习">
+<meta name="apple-mobile-web-app-title" content="宠物奶牛">
 <link rel="manifest" href="manifest.json?v=6">
 <link rel="apple-touch-icon" href="apple-touch-icon.png?v=6">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=6">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=6">
-<title>小雪·学习乐园</title>
+<title>宠物奶牛·学习乐园</title>
 <style>
 :root{
 --pink:#FF8FAB;--pink-l:#FFC5D9;--pink-d:#E57393;--pink-dd:#C24D6E;
@@ -324,12 +324,12 @@ body.testing-mode{overflow:hidden}
 <div class="app">
 <div class="mob-head">
 <button class="ham" onclick="toggleNav()">☰</button>
-<div class="mob-brand"><div class="logo">🐰</div><span class="brand-t">小雪学习乐园</span></div>
+<div class="mob-brand"><div class="logo">🐶</div><span class="brand-t">宠物奶牛·学习乐园</span></div>
 <div class="mob-pts">☀ <span id="mPts">0</span></div>
 </div>
 <div class="overlay" id="ov" onclick="closeNav()"></div>
 <aside class="nav" id="nav">
-<div class="nav-head"><div class="logo">🐰</div><div class="brand"><span class="brand-t">宠物小雪·学习乐园</span><span class="brand-s">二升三暑假工作台</span></div></div>
+<div class="nav-head"><div class="logo">🐶</div><div class="brand"><span class="brand-t">宠物奶牛·学习乐园</span><span class="brand-s">二升三暑假工作台</span></div></div>
 <nav class="nav-menu" id="nm">
 <div class="nav-item on" data-p="plan" onclick="go('plan')"><span class="nav-ico">📋</span><span>今日计划</span></div>
 <div class="nav-item" data-p="cn" onclick="go('cn')"><span class="nav-ico">📝</span><span>语文</span></div>
@@ -337,11 +337,11 @@ body.testing-mode{overflow:hidden}
 <div class="nav-item" data-p="eng" onclick="go('eng')"><span class="nav-ico">🔤</span><span>英语</span></div>
 <div class="nav-item" data-p="sport" onclick="go('sport')"><span class="nav-ico">🏃</span><span>运动</span></div>
 <div class="nav-item" data-p="game" onclick="go('game')"><span class="nav-ico">🎮</span><span>学习闯关</span></div>
-<div class="nav-item" data-p="pet" onclick="go('pet')"><span class="nav-ico">🐰</span><span>小兔子</span></div>
+<div class="nav-item" data-p="pet" onclick="go('pet')"><span class="nav-ico">🐾</span><span>宠物狗</span></div>
 <div class="nav-item" data-p="shop" onclick="go('shop')"><span class="nav-ico">🛒</span><span>积分商城</span></div>
 </nav>
 <div class="nav-foot">
-<div class="pet-mini"><span class="pet-emoji" id="pmEmoji">🐰</span><div class="pet-info"><div class="pet-name" id="pmName">小雪</div><div class="pet-bar"><div class="pet-bar-fill" id="pmBar" style="width:80%"></div></div></div></div>
+<div class="pet-mini"><span class="pet-emoji" id="pmEmoji">🐶</span><div class="pet-info"><div class="pet-name" id="pmName">奶牛</div><div class="pet-bar"><div class="pet-bar-fill" id="pmBar" style="width:80%"></div></div></div></div>
 </div>
 </aside>
 <main class="main"><div class="content" id="ct"></div></main>
@@ -486,7 +486,7 @@ cnPoemIdx:0,cnReadMin:0,
 mathLesson:null,mathQuizDone:{},mathErrBook:[],
 engWordDone:{},engErrBook:[],
 poems:{},
-pet:{name:'小雪',emoji:'🐰',hp:80,full:70,happy:60,clean:50},
+pet:{name:'奶牛',emoji:'🐶',hp:80,full:70,happy:60,clean:50},
 petOwned:[],
 petAnim:'',petSpeech:'',petAnimEmoji:'',petAnimTime:0,
 records:{},
@@ -498,8 +498,8 @@ function load(){try{S=JSON.parse(localStorage.getItem(KEY))||defS()}catch(e){S=d
 if(S.reset!==today()){Object.keys(S.ck).forEach(k=>S.ck[k]=false);S.reset=today();S.cnPoemIdx=0;S.cnReadMin=0}
 // 确保新字段
 if(!S.customTasks)S.customTasks=[];if(!S.mathErrBook)S.mathErrBook=[];if(!S.engErrBook)S.engErrBook=[];
-if(!S.pet)S.pet=defS().pet;if(S.pet.name==='小花'||S.pet.name==='奶牛')S.pet.name='小雪';
-if(S.pet.emoji==='🐶')S.pet.emoji='🐰';if(!S.petOwned)S.petOwned=[];if(!S.mathQuizDone)S.mathQuizDone={};if(!S.engWordDone)S.engWordDone={};if(!S.petAnim)S.petAnim='';if(!S.petSpeech)S.petSpeech='';if(!S.petAnimEmoji)S.petAnimEmoji='';if(!S.petAnimTime)S.petAnimTime=0;
+if(!S.pet)S.pet=defS().pet;if(S.pet.name==='小花')S.pet.name='奶牛';
+if(S.pet.emoji==='🐰')S.pet.emoji='🐶';if(!S.petOwned)S.petOwned=[];if(!S.mathQuizDone)S.mathQuizDone={};if(!S.engWordDone)S.engWordDone={};if(!S.petAnim)S.petAnim='';if(!S.petSpeech)S.petSpeech='';if(!S.petAnimEmoji)S.petAnimEmoji='';if(!S.petAnimTime)S.petAnimTime=0;
 // 如果动画状态超过3秒，自动清除过期动画
 if(S.petAnimTime&&Date.now()-S.petAnimTime>3000){S.petAnim='';S.petSpeech='';S.petAnimEmoji='';S.petAnimTime=0}
 // 兼容通关游戏进度
@@ -675,12 +675,12 @@ save();toast('错题已清除！','ok');go('eng')
 /* 宠物 */
 /* 宠物动画映射：每种动作对应不同的emoji、动画类名和语音 */
 const PET_ANIMS={
-feed:{emoji:'🥕',anim:'pet-bounce',speech:'嗯嘛~好吃！胡萝卜甜甜的~再给我一根嘛~'},
-water:{emoji:'💧',anim:'pet-wiggle',speech:'咕噜咕噜~水好清凉！耳朵都清爽啦~'},
-walk:{emoji:'🌸',anim:'pet-run',speech:'蹦蹦跳！外面花好香呀~小蝴蝶等等我~'},
-play:{emoji:'🎀',anim:'pet-jump',speech:'耶！玩蝴蝶结~接住啦~蹦蹦跳~'},
-bath:{emoji:'🫧',anim:'pet-shake',speech:'哗啦啦~洗得香喷喷！毛毛白白的最好看啦~'},
-sleep:{emoji:'🌙',anim:'pet-sleep',speech:'呼噜呼噜~好困呀，让我打个盹儿~zzZ'}
+feed:{emoji:'🤤',anim:'pet-bounce',speech:'嗷呜~好吃的！再来一点嘛~'},
+water:{emoji:'😋',anim:'pet-wiggle',speech:'咕噜咕噜~水真清凉！'},
+walk:{emoji:'🏃',anim:'pet-run',speech:'汪汪！出去溜溜真开心！外面的世界好大呀~'},
+play:{emoji:'😆',anim:'pet-jump',speech:'耶！玩球球！接住啦~汪汪汪！'},
+bath:{emoji:'🛁',anim:'pet-shake',speech:'哗啦啦~洗得真干净！香喷喷的奶牛~'},
+sleep:{emoji:'😴',anim:'pet-sleep',speech:'呼噜呼噜~好困呀，让我打个盹儿~zzZ'}
 };
 function petAction(action){
 const p=S.pet;let cost=0;
@@ -1501,7 +1501,7 @@ const animClass=isAnim?S.petAnim:'';
 const speechText=S.petSpeech||'';
 const speechBubble=speechText?`<div class="pet-bubble">${speechText}</div>`:'';
 return`
-<div class="pg-hd"><div class="pg-t">🐰 我的小兔子</div><div class="pg-s">完成打卡赚积分，照顾你的小兔兔</div></div>
+<div class="pg-hd"><div class="pg-t">🐾 我的宠物狗</div><div class="pg-s">完成打卡赚积分，照顾你的小狗</div></div>
 <div class="pet-area">
 <div class="pet-bubble-wrap">${speechBubble}</div>
 <div class="pet-big ${animClass}">${showEmoji}</div>
@@ -1513,10 +1513,10 @@ return`
 <div class="ps-item"><div class="ps-l">🧼 清洁</div><div class="ps-v" style="color:var(--blue-c)">${p.clean}%</div><div class="ps-bar"><div class="ps-fill clean" style="width:${p.clean}%"></div></div></div>
 </div>
 <div class="pet-actions">
-<button class="pa-btn gn" onclick="petAction('walk')">🌸 溜兔 (2☀)</button>
-<button class="pa-btn pk" onclick="petAction('feed')">🥕 喂食 (5☀)</button>
+<button class="pa-btn gn" onclick="petAction('walk')">🚶 遛狗 (2☀)</button>
+<button class="pa-btn pk" onclick="petAction('feed')">🥩 喂食 (5☀)</button>
 <button class="pa-btn sun" onclick="petAction('water')">💧 喝水 (3☀)</button>
-<button class="pa-btn lv" onclick="petAction('play')">🎀 玩耍 (3☀)</button>
+<button class="pa-btn lv" onclick="petAction('play')">🧸 玩耍 (3☀)</button>
 <button class="pa-btn bl" onclick="petAction('bath')">🛁 洗澡 (6☀)</button>
 <button class="pa-btn or" onclick="petAction('sleep')">💤 睡觉 (1☀)</button>
 </div>
@@ -1573,7 +1573,7 @@ const undone=getUndoneItems();
 if(undone.length===0)return; // 全完成了不需要提醒
 localStorage.setItem(todayKey,'1');
 const timeLabel=hour===11?'上午':hour===16?'下午':'晚上';
-const title=`⏰ ${timeLabel}提醒 · 小雪学习乐园`;
+const title=`⏰ ${timeLabel}提醒 · 宠物奶牛学习乐园`;
 const body=`你还有 ${undone.length} 项任务未完成：${undone.slice(0,5).join('、')}${undone.length>5?'等...':''}`;
 
 /* 优先使用浏览器通知 */
