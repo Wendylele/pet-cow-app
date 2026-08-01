@@ -324,7 +324,7 @@ body.testing-mode{overflow:hidden}
 <div class="app">
 <div class="mob-head">
 <button class="ham" onclick="toggleNav()">☰</button>
-<div class="mob-brand"><div class="logo">奶牛</div><span class="brand-t">学习乐园</span></div>
+<div class="mob-brand"><div class="logo">🐰</div><span class="brand-t">小雪学习乐园</span></div>
 <div class="mob-pts">☀ <span id="mPts">0</span></div>
 </div>
 <div class="overlay" id="ov" onclick="closeNav()"></div>
@@ -1573,7 +1573,7 @@ const undone=getUndoneItems();
 if(undone.length===0)return; // 全完成了不需要提醒
 localStorage.setItem(todayKey,'1');
 const timeLabel=hour===11?'上午':hour===16?'下午':'晚上';
-const title=`⏰ ${timeLabel}提醒 · 宠物奶牛学习乐园`;
+const title=`⏰ ${timeLabel}提醒 · 小雪学习乐园`;
 const body=`你还有 ${undone.length} 项任务未完成：${undone.slice(0,5).join('、')}${undone.length>5?'等...':''}`;
 
 /* 优先使用浏览器通知 */
