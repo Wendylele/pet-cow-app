@@ -1,4 +1,4 @@
-const CACHE_NAME = 'petCow-v5';
+const CACHE_NAME = 'petCow-v6';
 
 /* 安装：跳过等待，立即激活 */
 self.addEventListener('install', event => {
