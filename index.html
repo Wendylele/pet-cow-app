@@ -6,10 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="宠物奶牛">
-<link rel="manifest" href="manifest.json?v=7">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=7">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=7">
+<link rel="manifest" href="manifest.json?v=8">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=8">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=8">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=8">
 <title>宠物奶牛·学习乐园</title>
 <style>
 :root{
@@ -179,6 +179,43 @@ a{color:inherit;text-decoration:none}
 .kb-key:active{transform:scale(.92)}
 .kb-space{width:80px;font-size:13px}
 .game-score{font-size:16px;font-weight:700;color:var(--pink-d);margin:10px 0}
+/* 打卡日历 */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-nav-btn{width:36px;height:36px;border-radius:50%;border:none;background:var(--pink-l);color:var(--pink-d);font-size:18px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.cal-nav-btn:hover{background:var(--pink);color:#fff}
+.cal-title{font-size:17px;font-weight:800;color:var(--pink-d)}
+.cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.cal-wd{text-align:center;font-size:12px;font-weight:700;color:var(--t2);padding:4px 0}
+.cal-wd.we{color:var(--pink-d)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1;border-radius:var(--rs);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;position:relative;border:2px solid transparent}
+.cal-day.empty{cursor:default;background:transparent}
+.cal-day.future{color:#ccc;cursor:default;background:#fafafa}
+.cal-day.has-data{background:#E8F8EA;color:var(--green-d);border-color:var(--green)}
+.cal-day.has-data:hover{transform:scale(1.08);box-shadow:0 4px 12px rgba(107,203,119,.3)}
+.cal-day.partial{background:#FFF5D6;color:#C88A00;border-color:#FFD700}
+.cal-day.partial:hover{transform:scale(1.08);box-shadow:0 4px 12px rgba(255,215,0,.3)}
+.cal-day.no-data{background:#FFF0F0;color:var(--red);border-color:#FFB3B3}
+.cal-day.no-data:hover{transform:scale(1.08);box-shadow:0 4px 12px rgba(255,107,107,.3)}
+.cal-day.today{box-shadow:0 0 0 3px var(--pink)}
+.cal-day .cd-num{font-size:15px;font-weight:800}
+.cal-day .cd-dot{width:6px;height:6px;border-radius:50%;margin-top:2px}
+.cal-day.has-data .cd-dot{background:var(--green)}
+.cal-day.partial .cd-dot{background:#FFD700}
+.cal-day.no-data .cd-dot{background:var(--red)}
+.cal-legend{display:flex;gap:14px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.cal-legend-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--t2)}
+.cal-legend-dot{width:12px;height:12px;border-radius:4px}
+.cal-summary{display:flex;gap:10px;margin-bottom:14px}
+.cal-sum-card{flex:1;background:#fff;border-radius:var(--rs);padding:12px;text-align:center;box-shadow:var(--sh)}
+.cal-sum-num{font-size:22px;font-weight:800}
+.cal-sum-lbl{font-size:11px;color:var(--t2);margin-top:2px}
+.cal-detail-list{margin:10px 0}
+.cal-detail-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bg2);font-size:13px}
+.cal-detail-item:last-child{border-bottom:none}
+.cal-detail-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.cal-detail-icon.done{background:var(--green);color:#fff}
+.cal-detail-icon.undone{background:#f0f0f0;color:#ccc}
 /* 通关式游戏 */
 .level-map{display:flex;flex-direction:column;gap:16px}
 .level-row{background:#fff;border-radius:var(--r);padding:16px;box-shadow:var(--sh)}
@@ -331,7 +368,8 @@ body.testing-mode{overflow:hidden}
 <aside class="nav" id="nav">
 <div class="nav-head"><div class="logo">🐶</div><div class="brand"><span class="brand-t">宠物奶牛·学习乐园</span><span class="brand-s">二升三暑假工作台</span></div></div>
 <nav class="nav-menu" id="nm">
-<div class="nav-item on" data-p="plan" onclick="go('plan')"><span class="nav-ico">📋</span><span>今日计划</span></div>
+<div class="nav-item" data-p="plan" onclick="go('plan')"><span class="nav-ico">📋</span><span>今日计划</span></div>
+<div class="nav-item" data-p="cal" onclick="go('cal')"><span class="nav-ico">📅</span><span>打卡日历</span></div>
 <div class="nav-item" data-p="cn" onclick="go('cn')"><span class="nav-ico">📝</span><span>语文</span></div>
 <div class="nav-item" data-p="math" onclick="go('math')"><span class="nav-ico">🔢</span><span>数学</span></div>
 <div class="nav-item" data-p="eng" onclick="go('eng')"><span class="nav-ico">🔤</span><span>英语</span></div>
@@ -545,6 +583,24 @@ S.lastPenalty=null;
 }
 }
 
+/* 保存当日打卡详细快照（用于日历展示） */
+function saveDailyDetail(){
+const d=today();
+if(!S.records[d])S.records[d]={cks:0,pts:0};
+const labels={cn_poem:'背诵古诗',cn_read:'阅读30分钟',cn_write:'练字一页',cn_reading:'阅读理解一篇',cn_copy:'摘抄习作例文',
+math_calc:'数学计算一页',math_err:'数学错题复习',math_preview:'数学课时预习',
+eng_word:'英语单词默写',eng_trace:'单词描红一页',eng_read:'英语朗读',
+sport:'跳绳150个'};
+const details=[];
+Object.entries(S.ck).forEach(([k,v])=>{
+if(labels[k])details.push({name:labels[k],done:!!v})
+});
+S.customTasks.forEach(t=>{
+details.push({name:t.name,done:!!t.done,custom:true})
+});
+S.records[d].details=details;
+}
+
 /* 展示扣分弹窗 */
 function showPenaltyPopup(penalty){
 document.getElementById('mc').innerHTML=`
@@ -646,12 +702,14 @@ if(S.ck[key]){
 // 撤回打卡
 S.ck[key]=false;S.pts-=pts;
 const d=today();if(S.records[d]){S.records[d].cks--;S.records[d].pts-=pts;if(S.records[d].cks<=0)delete S.records[d]}
+saveDailyDetail();
 save();updUI();toast(`已撤回打卡，-${pts}积分`,'no');go(location.hash.replace('#','')||'plan')
 }else{
 // 打卡
 S.ck[key]=true;S.pts+=pts;
 const d=today();if(!S.records[d])S.records[d]={cks:0,pts:0};
 S.records[d].cks++;S.records[d].pts+=pts;
+saveDailyDetail();
 save();updUI();
 /* 检查是否全部完成 */
 const allCkDone=Object.values(S.ck).every(Boolean);
@@ -674,12 +732,14 @@ if(t.done){
 // 撤回自定义打卡
 t.done=false;S.pts-=t.pts;
 const d=today();if(S.records[d]){S.records[d].cks--;S.records[d].pts-=t.pts;if(S.records[d].cks<=0)delete S.records[d]}
+saveDailyDetail();
 save();updUI();toast(`已撤回打卡，-${t.pts}积分`,'no');go('plan')
 }else{
 // 打卡
 t.done=true;S.pts+=t.pts;
 const d=today();if(!S.records[d])S.records[d]={cks:0,pts:0};
 S.records[d].cks++;S.records[d].pts+=t.pts;
+saveDailyDetail();
 save();updUI();
 /* 检查是否全部完成 */
 const allCkDone=Object.values(S.ck).every(Boolean);
@@ -777,8 +837,124 @@ S.pts-=it.p;S.petOwned.push(id);save();updUI();toast(`购买${it.n}成功！`,'o
 
 /* ===== 渲染 ===== */
 function render(p){
-const R={plan:pgPlan,cn:pgCn,math:pgMath,eng:pgEng,sport:pgSport,game:pgGame,pet:pgPet,shop:pgShop};
+const R={plan:pgPlan,cal:pgCal,cn:pgCn,math:pgMath,eng:pgEng,sport:pgSport,game:pgGame,pet:pgPet,shop:pgShop};
 return R[p]?`<div class="page on">${R[p]()}</div>`:'<p>建设中</p>'
+}
+
+/* 0. 打卡日历 */
+let calCursor=new Date();
+function pgCal(){
+const y=calCursor.getFullYear();
+const m=calCursor.getMonth();
+const todayStr=today();
+const firstDay=new Date(y,m,1);
+const lastDay=new Date(y,m+1,0);
+const startWeekday=firstDay.getDay(); /* 0=周日 */
+const daysInMonth=lastDay.getDate();
+/* 统计数据 */
+let fullDays=0,partialDays=0,missDays=0,totalCks=0,totalPts=0;
+Object.entries(S.records).forEach(([date,r])=>{
+if(date.startsWith(y+'-'+String(m+1).padStart(2,'0'))){
+const total=S.ck?Object.keys(S.ck).length+ (r.details?r.details.filter(d=>d.custom).length:0):0;
+const done=r.cks||0;
+if(r.details){
+const allDone=r.details.every(d=>d.done);
+if(allDone&&r.details.length>0)fullDays++;
+else if(done>0)partialDays++;
+else missDays++;
+}else{
+if(done>0)partialDays++;else missDays++;
+}
+totalCks+=done;totalPts+=r.pts||0;
+}
+});
+/* 生成日历格子 */
+let cells='';
+/* 星期标题 */
+const wdNames=['日','一','二','三','四','五','六'];
+const wdHtml=wdNames.map((w,i)=>`<div class="cal-wd ${i===0||i===6?'we':''}">${w}</div>`).join('');
+/* 空格填充 */
+for(let i=0;i<startWeekday;i++)cells+=`<div class="cal-day empty"></div>`;
+/* 每一天 */
+for(let dd=1;dd<=daysInMonth;dd++){
+const dateStr=y+'-'+String(m+1).padStart(2,'0')+'-'+String(dd).padStart(2,'0');
+const r=S.records[dateStr];
+const isFuture=dateStr>todayStr;
+const isToday=dateStr===todayStr;
+let cls='cal-day';
+let dotColor='';
+if(isFuture){cls+=' future';cells+=`<div class="${cls}"><div class="cd-num">${dd}</div></div>`;continue;}
+if(r&&r.details){
+const allDone=r.details.every(d=>d.done);
+const someDone=r.details.some(d=>d.done);
+if(allDone&&r.details.length>0){cls+=' has-data'}
+else if(someDone){cls+=' partial'}
+else{cls+=' no-data'}
+}else if(r&&r.cks>0){
+cls+=' partial';
+}else if(r){
+cls+=' no-data';
+}else{
+/* 没有记录：如果日期在今天之前，说明那天没打卡 */
+if(dateStr<todayStr){cls+=' no-data'}else{cls+=' future'}
+}
+if(isToday)cls+=' today';
+cells+=`<div class="${cls}" onclick="showDayDetail('${dateStr}')"><div class="cd-num">${dd}</div><div class="cd-dot"></div></div>`;
+}
+return`
+<div class="pg-hd"><div class="pg-t">📅 打卡日历</div><div class="pg-s">查看每天的打卡完成情况</div></div>
+<div class="cal-summary">
+<div class="cal-sum-card"><div class="cal-sum-num" style="color:var(--green-d)">${fullDays}</div><div class="cal-sum-lbl">全部完成</div></div>
+<div class="cal-sum-card"><div class="cal-sum-num" style="color:#C88A00">${partialDays}</div><div class="cal-sum-lbl">部分完成</div></div>
+<div class="cal-sum-card"><div class="cal-sum-num" style="color:var(--red)">${missDays}</div><div class="cal-sum-lbl">未打卡</div></div>
+<div class="cal-sum-card"><div class="cal-sum-num" style="color:var(--pink-d)">${totalCks}</div><div class="cal-sum-lbl">总打卡数</div></div>
+</div>
+<div class="card">
+<div class="cal-header">
+<button class="cal-nav-btn" onclick="calPrev()">‹</button>
+<div class="cal-title">${y}年${m+1}月</div>
+<button class="cal-nav-btn" onclick="calNext()">›</button>
+</div>
+<div class="cal-weekdays">${wdHtml}</div>
+<div class="cal-grid">${cells}</div>
+<div class="cal-legend">
+<div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--green)"></div>全部完成</div>
+<div class="cal-legend-item"><div class="cal-legend-dot" style="background:#FFD700"></div>部分完成</div>
+<div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--red)"></div>未打卡</div>
+<div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--pink);border-radius:50%"></div>今天</div>
+</div>
+</div>
+<div style="text-align:center;margin-top:12px"><button class="bse" style="width:auto;padding:8px 24px" onclick="calCursor=new Date();go('cal')">回到本月</button></div>`
+}
+function calPrev(){calCursor.setMonth(calCursor.getMonth()-1);go('cal')}
+function calNext(){calCursor.setMonth(calCursor.getMonth()+1);go('cal')}
+
+/* 点击日期查看详情 */
+function showDayDetail(dateStr){
+const r=S.records[dateStr];
+const d=new Date(dateStr);const dStr=d.getMonth()+1+'月'+d.getDate()+'日';
+let detailsHtml='';
+if(r&&r.details){
+detailsHtml=r.details.map(it=>`<div class="cal-detail-item"><div class="cal-detail-icon ${it.done?'done':'undone'}">${it.done?'✓':'✗'}</div><span style="${it.done?'':'color:var(--t2)'}">${it.name}</span></div>`).join('');
+}else if(r&&r.cks>0){
+detailsHtml=`<div style="text-align:center;color:var(--t2);padding:16px">该日打卡 ${r.cks} 项，获得 ${r.pts}☀ 积分</div>`;
+}else{
+detailsHtml=`<div style="text-align:center;color:var(--t2);padding:16px">📝 该日无打卡记录</div>`;
+}
+const cks=r?r.cks:0;const pts=r?r.pts:0;
+const total=r&&r.details?r.details.length:(cks>0?cks:0);
+const done=r&&r.details?r.details.filter(d=>d.done).length:cks;
+const pct=total>0?Math.round(done/total*100):0;
+document.getElementById('mc').innerHTML=`
+<div class="mt">📅 ${dStr} 打卡详情</div>
+<div style="display:flex;gap:10px;margin:10px 0">
+<div style="flex:1;text-align:center;background:var(--bg2);border-radius:var(--rs);padding:10px"><div style="font-size:22px;font-weight:800;color:var(--pink-d)">${done}/${total||'-'}</div><div style="font-size:11px;color:var(--t2)">完成/总数</div></div>
+<div style="flex:1;text-align:center;background:var(--bg2);border-radius:var(--rs);padding:10px"><div style="font-size:22px;font-weight:800;color:var(--green-d)">${pct}%</div><div style="font-size:11px;color:var(--t2)">完成率</div></div>
+<div style="flex:1;text-align:center;background:var(--bg2);border-radius:var(--rs);padding:10px"><div style="font-size:22px;font-weight:800;color:var(--sun-d)">${pts}☀</div><div style="font-size:11px;color:var(--t2)">当日积分</div></div>
+</div>
+<div class="cal-detail-list">${detailsHtml}</div>
+<div class="mf"><button class="bpr" onclick="clM()">关闭</button></div>`;
+document.getElementById('mm').classList.add('show');
 }
 
 /* 1. 今日计划 */
@@ -1701,7 +1877,7 @@ showPenaltyPopup(S.lastPenalty);
 S.lastPenalty=null;save();
 }
 const h=location.hash.replace('#','')||'plan';
-go(['plan','cn','math','eng','sport','game','pet','shop'].includes(h)?h:'plan');
+go(['plan','cal','cn','math','eng','sport','game','pet','shop'].includes(h)?h:'plan');
 /* 启动提醒系统 */
 askNotifyPermission();
 checkRemind();
@@ -1710,10 +1886,10 @@ setInterval(checkRemind,60000);
 if('serviceWorker' in navigator){
 /* SW更新后自动刷新页面 - 先注册避免错过事件 */
 navigator.serviceWorker.addEventListener('controllerchange',()=>{console.log('新SW已激活，刷新页面');location.reload()});
-navigator.serviceWorker.register('./sw.js?v7').then(reg=>{
+navigator.serviceWorker.register('./sw.js?v8').then(reg=>{
 if(reg.waiting)reg.waiting.postMessage('skipWaiting');
 reg.addEventListener('updatefound',()=>{const nw=reg.installing;if(nw){nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&navigator.serviceWorker.controller){nw.postMessage('skipWaiting')}})}});
-console.log('SW注册成功 v7');
+console.log('SW注册成功 v8');
 /* 每30分钟检查一次更新 */
 setInterval(()=>reg.update(),30*60*1000);
 }).catch(err=>{console.log('SW注册失败:',err)});
