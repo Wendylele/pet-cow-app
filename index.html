@@ -6,10 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="宠物奶牛">
-<link rel="manifest" href="manifest.json?v=6">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=6">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=6">
-<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=6">
+<link rel="manifest" href="manifest.json?v=7">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=7">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=7">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png?v=7">
 <title>宠物奶牛·学习乐园</title>
 <style>
 :root{
@@ -491,11 +491,21 @@ petOwned:[],
 petAnim:'',petSpeech:'',petAnimEmoji:'',petAnimTime:0,
 records:{},
 customTasks:[],
-gameProgress:null
+gameProgress:null,
+lastCk:{},
+lastCkDate:'',
+lastPenalty:null
 }}
 
 function load(){try{S=JSON.parse(localStorage.getItem(KEY))||defS()}catch(e){S=defS()}
-if(S.reset!==today()){Object.keys(S.ck).forEach(k=>S.ck[k]=false);S.reset=today();S.cnPoemIdx=0;S.cnReadMin=0}
+if(S.reset!==today()){
+/* 跨天了：检查昨天未完成打卡，每项扣1分 */
+penaltyUndone();
+Object.keys(S.ck).forEach(k=>S.ck[k]=false);
+/* 自定义任务也重置 */
+S.customTasks.forEach(t=>t.done=false);
+S.reset=today();S.cnPoemIdx=0;S.cnReadMin=0
+}
 // 确保新字段
 if(!S.customTasks)S.customTasks=[];if(!S.mathErrBook)S.mathErrBook=[];if(!S.engErrBook)S.engErrBook=[];
 if(!S.pet)S.pet=defS().pet;if(S.pet.name==='小花')S.pet.name='奶牛';
@@ -505,7 +515,54 @@ if(S.petAnimTime&&Date.now()-S.petAnimTime>3000){S.petAnim='';S.petSpeech='';S.p
 // 兼容通关游戏进度
 if(!S.gameProgress)S.gameProgress={poem:{unlocked:1,levels:{}},math:{unlocked:1,levels:{},highScore:0},eng:{unlocked:1,levels:{}}};
 ['poem','math','eng'].forEach(t=>{if(!S.gameProgress[t])S.gameProgress[t]={unlocked:1,levels:{}};if(!S.gameProgress[t].unlocked)S.gameProgress[t].unlocked=1;if(!S.gameProgress[t].levels)S.gameProgress[t].levels={};if(t==='math'&&!S.gameProgress[t].highScore)S.gameProgress[t].highScore=0});
+if(!S.lastCk)S.lastCk={};if(!S.lastCkDate)S.lastCkDate='';if(!S.lastPenalty)S.lastPenalty=null;
 save();updUI()
+}
+
+/* 跨天扣分：检查昨天未完成打卡，每项扣1分 */
+function penaltyUndone(){
+const labels={cn_poem:'背诵古诗',cn_read:'阅读30分钟',cn_write:'练字一页',cn_reading:'阅读理解一篇',cn_copy:'摘抄习作例文',
+math_calc:'数学计算一页',math_err:'数学错题复习',math_preview:'数学课时预习',
+eng_word:'英语单词默写',eng_trace:'单词描红一页',eng_read:'英语朗读',
+sport:'跳绳150个'};
+/* 标准打卡项：未完成的每项扣1分 */
+let penalty=0;const undoneNames=[];
+Object.entries(S.ck).forEach(([k,v])=>{
+if(!v&&labels[k]){penalty++;undoneNames.push(labels[k])}
+});
+/* 自定义任务：未完成的也扣1分 */
+S.customTasks.forEach(t=>{if(!t.done){penalty++;undoneNames.push(t.name)}});
+if(penalty>0){
+S.pts=Math.max(0,S.pts-penalty);
+/* 记录扣分 */
+const d=S.reset; /* 昨天的日期 */
+if(!S.records[d])S.records[d]={cks:0,pts:0};
+S.records[d].pts-=penalty;
+/* 存储扣分信息，供弹窗展示 */
+S.lastPenalty={date:d,count:penalty,names:undoneNames};
+}else{
+S.lastPenalty=null;
+}
+}
+
+/* 展示扣分弹窗 */
+function showPenaltyPopup(penalty){
+document.getElementById('mc').innerHTML=`
+<div style="text-align:center;padding:10px">
+<div style="font-size:48px;margin:10px 0">😰</div>
+<div class="mt" style="font-size:18px">昨日有 ${penalty.count} 项未完成</div>
+<div class="ms">${penalty.date} 扣除 ${penalty.count} 积分（每项 -1☀）</div>
+<div style="background:var(--bg2);border-radius:var(--rs);padding:12px;margin:12px 0;text-align:left">
+<div style="font-size:13px;font-weight:700;color:var(--pink-d);margin-bottom:6px">未完成的项目：</div>
+<div style="font-size:13px;color:var(--t2);line-height:1.8">
+${penalty.names.map(n=>`<div>• ${n}</div>`).join('')}
+</div>
+</div>
+<div style="font-size:13px;color:var(--t2);margin:8px 0">今天加油哦，全部完成不扣分！💪</div>
+<div class="mf"><button class="bpr" onclick="clM();go('plan')">知道了，去打卡</button></div>
+</div>`;
+document.getElementById('mm').classList.add('show');
+playSound('wrong');
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function updUI(){
@@ -760,6 +817,24 @@ return`
 <div class="pbar"><div class="pfill" style="width:${pct}%"></div></div>
 <p style="font-size:13px;color:var(--t2);margin-top:4px">${pct===100?'太棒了！今天全部完成啦！':`还差 ${allTotal-allDone} 项，加油！`}</p>
 </div>
+
+${S.lastPenalty?`
+<div class="card" style="background:#FFF0F0;border:2px solid var(--red)">
+<div class="card-t" style="color:var(--red)">😰 昨日扣分提醒</div>
+<div style="font-size:13px;color:var(--t2);margin:6px 0">${S.lastPenalty.date} 有 <b style="color:var(--red)">${S.lastPenalty.count}</b> 项未完成，已扣除 <b style="color:var(--red)">${S.lastPenalty.count}☀</b>（每项-1分）</div>
+<div style="font-size:12px;color:var(--t2);line-height:1.6">
+${S.lastPenalty.names.map(n=>`<span style="display:inline-block;background:#fff;padding:2px 8px;border-radius:8px;margin:2px">❌ ${n}</span>`).join('')}
+</div>
+<div style="font-size:12px;color:var(--pink-d);margin-top:6px;font-weight:600">今天全部完成就不会扣分啦！💪</div>
+</div>`:`
+<div class="card" style="background:linear-gradient(135deg,#FFF5D6,#FFEFB0)">
+<div class="card-t">⚠️ 扣分规则</div>
+<div style="font-size:13px;color:var(--t1);line-height:1.6">
+每天跨天时，<b style="color:var(--pink-d)">未完成的打卡项每项扣1分</b>☀<br>
+包括标准打卡和自定义任务哦~<br>
+<span style="color:var(--green-d);font-weight:600">全部完成则不扣分！加油！</span>
+</div>
+</div>`}
 
 <div class="card">
 <div class="card-t">📝 语文打卡</div>
@@ -1620,6 +1695,11 @@ Notification.requestPermission();
 /* ===== 启动 ===== */
 window.addEventListener('DOMContentLoaded',()=>{
 load();
+/* 如果跨天有扣分，展示扣分弹窗 */
+if(S.lastPenalty){
+showPenaltyPopup(S.lastPenalty);
+S.lastPenalty=null;save();
+}
 const h=location.hash.replace('#','')||'plan';
 go(['plan','cn','math','eng','sport','game','pet','shop'].includes(h)?h:'plan');
 /* 启动提醒系统 */
@@ -1630,10 +1710,10 @@ setInterval(checkRemind,60000);
 if('serviceWorker' in navigator){
 /* SW更新后自动刷新页面 - 先注册避免错过事件 */
 navigator.serviceWorker.addEventListener('controllerchange',()=>{console.log('新SW已激活，刷新页面');location.reload()});
-navigator.serviceWorker.register('./sw.js?v6').then(reg=>{
+navigator.serviceWorker.register('./sw.js?v7').then(reg=>{
 if(reg.waiting)reg.waiting.postMessage('skipWaiting');
 reg.addEventListener('updatefound',()=>{const nw=reg.installing;if(nw){nw.addEventListener('statechange',()=>{if(nw.state==='installed'&&navigator.serviceWorker.controller){nw.postMessage('skipWaiting')}})}});
-console.log('SW注册成功 v6');
+console.log('SW注册成功 v7');
 /* 每30分钟检查一次更新 */
 setInterval(()=>reg.update(),30*60*1000);
 }).catch(err=>{console.log('SW注册失败:',err)});
